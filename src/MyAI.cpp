@@ -86,19 +86,21 @@ Agent::Action MyAI::getAction( int number )
       {
         if(checked.size() > 0)
         {
-          vector<int> zero = checked[checked.size() - 1];
-          checked.pop_back();
-          int new_x = zero[0];
-          int new_y = zero[1];
-          x = new_x;
-          y = new_y;
-          if(isCovered(new_x, new_y))
-            return {UNCOVER, new_x, new_y};
+          for(int i = 0; i < checked.size(); i++)
+          {
+            vector<int> zero = checked[checked.size() - 1];
+            checked.pop_back();
+            int new_x = zero[0];
+            int new_y = zero[1];
+            if(isCovered(new_x, new_y))
+            {
+              x = new_x;
+              y = new_y;
+              return {UNCOVER, new_x, new_y};
+            }
+          }
         }
       }
-
-
-
 
       cout << "LABEL: " << number << endl;
       cout << "MARKED: " << marked << endl;
@@ -108,6 +110,7 @@ Agent::Action MyAI::getAction( int number )
       cout << "COVERED: " << covered << endl;
       cout << "MINES: " << mines << endl;
       cout << "UNCOVERED: " << uncovered << endl;
+      cout << "CHECKED SIZE: " << checked.size() << endl;
 
 
       if(effective==unmarked)
