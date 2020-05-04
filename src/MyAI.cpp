@@ -66,19 +66,6 @@ Agent::Action MyAI::getAction( int number )
 
     if(covered != mines)
     {
-      // uses the checked vector to uncover all boxes
-      // around a zero, keeps going till done.
-      if(checked.size() > 0)
-      {
-        vector<int> zero = checked[checked.size() - 1];
-        checked.pop_back();
-        int new_x = zero[0];
-        int new_y = zero[1];
-        x = new_x;
-        y = new_y;
-        return {UNCOVER, new_x, new_y};
-      }
-
       int flags = getType(x, y, "-1");
       int marked = 0;
       for(int i = 0; i < 9; i++)
@@ -86,9 +73,35 @@ Agent::Action MyAI::getAction( int number )
         marked += getType(x, y, to_string(i));
       }
       marked += flags;
-      int unmarked = getType(x, y, ".");
-
       int effective = number - flags;
+
+      int unmarked = 0;
+      if(effective == 0)
+        unmarked = getType(x, y, ".");
+
+
+
+      // uses the checked vector to uncover all boxes
+      // around a zero, keeps going till done.
+      if(effective == 0 || checked.size() > 0)
+      {
+        if(unmarked > 0)
+          addZeroes(x, y);
+
+        if(checked.size() > 0)
+        {
+          vector<int> zero = checked[checked.size() - 1];
+          checked.pop_back();
+          int new_x = zero[0];
+          int new_y = zero[1];
+          x = new_x;
+          y = new_y;
+          return {UNCOVER, new_x, new_y};
+        }
+      }
+
+
+
 
       cout << "LABEL: " << number << endl;
       cout << "MARKED: " << marked << endl;
@@ -99,25 +112,6 @@ Agent::Action MyAI::getAction( int number )
       cout << "MINES: " << mines << endl;
       cout << "UNCOVERED: " << uncovered << endl;
 
-      if(effective == 0)
-      {
-        if(unmarked > 0)
-        {
-          addZeroes(x, y);
-          // uses the checked vector to uncover all boxes
-          // around a zero, keeps going till done.
-          if(checked.size() > 0)
-          {
-            vector<int> zero = checked[checked.size() - 1];
-            checked.pop_back();
-            int new_x = zero[0];
-            int new_y = zero[1];
-            x = new_x;
-            y = new_y;
-            return {UNCOVER, new_x, new_y};
-          }
-        }
-      }
 
       // if(effective == 0 || (effective==unmarked))
       // {
@@ -192,6 +186,9 @@ void MyAI::addZeroes(int x, int y)
   {
     int new_x = x + n[1];
     int new_y = y + n[0];
+
+    cout << "NEW_X: " << new_x << endl;
+    cout << "NEW_Y: " << new_y << endl;
 
     if((new_x < col && new_x >= 0) && (new_y < row && new_y >= 0))
     {
