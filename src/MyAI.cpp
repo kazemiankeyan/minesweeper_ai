@@ -60,12 +60,14 @@ Agent::Action MyAI::getAction( int number )
     for(int size = checked.size() - 1; size >= 0; size--)
     {
       for(int c = 0; c < checked[size].size(); c++)
-        std::cout << checked[size][c] << ' ';
+        std::cout << checked[size][c] + 1 << ' ';
       std::cout << std::endl;
     }
 
     if(covered != mines)
     {
+      // uses the checked vector to uncover all boxes
+      // around a zero, keeps going till done.
       if(checked.size() > 0)
       {
         vector<int> zero = checked[checked.size() - 1];
@@ -94,49 +96,69 @@ Agent::Action MyAI::getAction( int number )
       cout << "FLAGS: " << flags << endl;
       cout << "EFFECTIVE: " << effective << endl;
       cout << "COVERED: " << covered << endl;
+      cout << "MINES: " << mines << endl;
       cout << "UNCOVERED: " << uncovered << endl;
 
-
-      if(effective == 0 || (effective==unmarked))
+      if(effective == 0)
       {
-        int adj8 [8][2] = {{-1, 1}, {-1, 0}, {1 , 1},
-                          {-1, 0},           {1, 0},
-                          {-1, -1}, {0, -1}, {1, -1}};
-
-        for(int *n : adj8)
+        if(unmarked > 0)
         {
-          int new_x = x + n[1];
-          int new_y = y + n[0];
-
-          if((new_x < col && new_x >= 0) && (new_y < row && new_y > 0) && isUncovered(new_x, new_y))
+          addZeroes(x, y);
+          // uses the checked vector to uncover all boxes
+          // around a zero, keeps going till done.
+          if(checked.size() > 0)
           {
+            vector<int> zero = checked[checked.size() - 1];
+            checked.pop_back();
+            int new_x = zero[0];
+            int new_y = zero[1];
             x = new_x;
             y = new_y;
-
-            if(effective == 0)
-            {
-              if(unmarked > 0)
-              {
-                addZeroes(x, y);
-                if(checked.size() > 0)
-                {
-                  vector<int> zero = checked[checked.size() - 1];
-                  checked.pop_back();
-                  int new_x = zero[0];
-                  int new_y = zero[1];
-                  x = new_x;
-                  y = new_y;
-                  return {UNCOVER, new_x, new_y};
-                }
-              }
-              return {UNCOVER, x,y};
-            }
-
-            if(effective == unmarked)
-              return {FLAG, x, y};
+            return {UNCOVER, new_x, new_y};
           }
         }
       }
+
+      // if(effective == 0 || (effective==unmarked))
+      // {
+      //   int adj8 [8][2] = {{-1, 1}, {-1, 0}, {1 , 1},
+      //                     {-1, 0},           {1, 0},
+      //                     {-1, -1}, {0, -1}, {1, -1}};
+      //
+      //   for(int *n : adj8)
+      //   {
+      //     int new_x = x + n[1];
+      //     int new_y = y + n[0];
+      //
+      //     if((new_x < col && new_x >= 0) && (new_y < row && new_y > 0) && isUncovered(new_x, new_y))
+      //     {
+      //       x = new_x;
+      //       y = new_y;
+      //
+      //       if(effective == 0)
+      //       {
+      //         if(unmarked > 0)
+      //         {
+      //           addZeroes(x, y);
+      //           if(checked.size() > 0)
+      //           {
+      //             vector<int> zero = checked[checked.size() - 1];
+      //             checked.pop_back();
+      //             int new_x = zero[0];
+      //             int new_y = zero[1];
+      //             x = new_x;
+      //             y = new_y;
+      //             return {UNCOVER, new_x, new_y};
+      //           }
+      //         }
+      //         return {UNCOVER, x,y};
+      //       }
+      //
+      //       if(effective == unmarked)
+      //         return {FLAG, x, y};
+      //     }
+      //   }
+      // }
     }
     return {LEAVE,-1,-1};
     // ======================================================================
@@ -194,8 +216,8 @@ bool MyAI::isUncovered(int x, int y)
 void MyAI::fillBoard(int x, int y, int number)
 {
   std::cout << "NUMBER: " << number << std::endl;
-  std::cout << "X: " << x << std::endl;
-  std::cout << "Y: " << y << std::endl;
+  std::cout << "X: " << x + 1<< std::endl;
+  std::cout << "Y: " << y + 1<< std::endl;
   covered -= 1;
   uncovered +=1;
   board[y][x] = to_string(number);
