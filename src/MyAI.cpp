@@ -75,19 +75,15 @@ Agent::Action MyAI::getAction( int number )
       marked += flags;
       int effective = number - flags;
 
-      int unmarked = 0;
-      if(effective == 0)
-        unmarked = getType(x, y, ".");
+      int unmarked = getType(x, y, ".");
 
-
+      if(unmarked > 0 && effective == 0)
+        addZeroes(x, y);
 
       // uses the checked vector to uncover all boxes
       // around a zero, keeps going till done.
       if(effective == 0 || checked.size() > 0)
       {
-        if(unmarked > 0)
-          addZeroes(x, y);
-
         if(checked.size() > 0)
         {
           vector<int> zero = checked[checked.size() - 1];
@@ -96,7 +92,8 @@ Agent::Action MyAI::getAction( int number )
           int new_y = zero[1];
           x = new_x;
           y = new_y;
-          return {UNCOVER, new_x, new_y};
+          if(isCovered(new_x, new_y))
+            return {UNCOVER, new_x, new_y};
         }
       }
 
@@ -113,46 +110,25 @@ Agent::Action MyAI::getAction( int number )
       cout << "UNCOVERED: " << uncovered << endl;
 
 
-      // if(effective == 0 || (effective==unmarked))
-      // {
-      //   int adj8 [8][2] = {{-1, 1}, {-1, 0}, {1 , 1},
-      //                     {-1, 0},           {1, 0},
-      //                     {-1, -1}, {0, -1}, {1, -1}};
-      //
-      //   for(int *n : adj8)
-      //   {
-      //     int new_x = x + n[1];
-      //     int new_y = y + n[0];
-      //
-      //     if((new_x < col && new_x >= 0) && (new_y < row && new_y > 0) && isUncovered(new_x, new_y))
-      //     {
-      //       x = new_x;
-      //       y = new_y;
-      //
-      //       if(effective == 0)
-      //       {
-      //         if(unmarked > 0)
-      //         {
-      //           addZeroes(x, y);
-      //           if(checked.size() > 0)
-      //           {
-      //             vector<int> zero = checked[checked.size() - 1];
-      //             checked.pop_back();
-      //             int new_x = zero[0];
-      //             int new_y = zero[1];
-      //             x = new_x;
-      //             y = new_y;
-      //             return {UNCOVER, new_x, new_y};
-      //           }
-      //         }
-      //         return {UNCOVER, x,y};
-      //       }
-      //
-      //       if(effective == unmarked)
-      //         return {FLAG, x, y};
-      //     }
-      //   }
-      // }
+      if(effective==unmarked)
+      {
+        int adj8 [8][2] = {{-1, 1}, {-1, 0}, {1 , 1},
+                          {-1, 0},           {1, 0},
+                          {-1, -1}, {0, -1}, {1, -1}};
+
+        for(int *n : adj8)
+        {
+          int new_x = x + n[1];
+          int new_y = y + n[0];
+
+          if((new_x < col && new_x >= 0) && (new_y < row && new_y > 0) && isCovered(new_x, new_y))
+          {
+            x = new_x;
+            y = new_y;
+            return {FLAG, x, y};
+          }
+        }
+      }
     }
     return {LEAVE,-1,-1};
     // ======================================================================
@@ -203,7 +179,7 @@ void MyAI::addZeroes(int x, int y)
   }
 }
 
-bool MyAI::isUncovered(int x, int y)
+bool MyAI::isCovered(int x, int y)
 {
   if(board[y][x] == ".")
     return true;

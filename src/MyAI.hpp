@@ -38,7 +38,7 @@ public:
 
     void printBoard();
     void addZeroes(int x, int y);
-    bool isUncovered(int x, int y);
+    bool isCovered(int x, int y);
     void fillBoard(int x, int y, int number);
     int getType(int x, int y, string type);
     // ======================================================================
