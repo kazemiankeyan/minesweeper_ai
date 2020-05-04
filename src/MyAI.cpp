@@ -56,13 +56,13 @@ Agent::Action MyAI::getAction( int number )
     // double remaining_time = 0.0;
     fillBoard(x, y, number);
 
-    cout << "ZEROES CHECKED GRID ----- " << endl;
-    for(int size = checked.size() - 1; size >= 0; size--)
-    {
-      for(int c = 0; c < checked[size].size(); c++)
-        std::cout << checked[size][c] + 1 << ' ';
-      std::cout << std::endl;
-    }
+    // cout << "ZEROES CHECKED GRID ----- " << endl;
+    // for(int size = checked.size() - 1; size >= 0; size--)
+    // {
+    //   for(int c = 0; c < checked[size].size(); c++)
+    //     std::cout << checked[size][c] + 1 << ' ';
+    //   std::cout << std::endl;
+    // }
 
     if(covered != mines)
     {
@@ -102,15 +102,15 @@ Agent::Action MyAI::getAction( int number )
         }
       }
 
-      cout << "LABEL: " << number << endl;
-      cout << "MARKED: " << marked << endl;
-      cout << "UNMARKED: " << unmarked << endl;
-      cout << "FLAGS: " << flags << endl;
-      cout << "EFFECTIVE: " << effective << endl;
-      cout << "COVERED: " << covered << endl;
-      cout << "MINES: " << mines << endl;
-      cout << "UNCOVERED: " << uncovered << endl;
-      cout << "CHECKED SIZE: " << checked.size() << endl;
+      // cout << "LABEL: " << number << endl;
+      // cout << "MARKED: " << marked << endl;
+      // cout << "UNMARKED: " << unmarked << endl;
+      // cout << "FLAGS: " << flags << endl;
+      // cout << "EFFECTIVE: " << effective << endl;
+      // cout << "COVERED: " << covered << endl;
+      // cout << "MINES: " << mines << endl;
+      // cout << "UNCOVERED: " << uncovered << endl;
+      // cout << "CHECKED SIZE: " << checked.size() << endl;
 
 
       if(effective==unmarked)
@@ -147,12 +147,12 @@ Agent::Action MyAI::getAction( int number )
 
 void MyAI::printBoard()
 {
-  for(int r = row - 1; r >= 0; r--)
-  {
-    for(int c = 0; c < col; c++)
-      std::cout << board[r][c] << ' ';
-    std::cout << std::endl;
-  }
+  // for(int r = row - 1; r >= 0; r--)
+  // {
+  //   for(int c = 0; c < col; c++)
+  //     std::cout << board[r][c] << ' ';
+  //   std::cout << std::endl;
+  // }
 }
 
 void MyAI::addZeroes(int x, int y)
@@ -166,8 +166,8 @@ void MyAI::addZeroes(int x, int y)
     int new_x = x + n[1];
     int new_y = y + n[0];
 
-    cout << "NEW_X: " << new_x << endl;
-    cout << "NEW_Y: " << new_y << endl;
+    // cout << "NEW_X: " << new_x << endl;
+    // cout << "NEW_Y: " << new_y << endl;
 
     if((new_x < col && new_x >= 0) && (new_y < row && new_y >= 0))
     {
@@ -191,9 +191,9 @@ bool MyAI::isCovered(int x, int y)
 
 void MyAI::fillBoard(int x, int y, int number)
 {
-  std::cout << "NUMBER: " << number << std::endl;
-  std::cout << "X: " << x + 1<< std::endl;
-  std::cout << "Y: " << y + 1<< std::endl;
+  // std::cout << "NUMBER: " << number << std::endl;
+  // std::cout << "X: " << x + 1<< std::endl;
+  // std::cout << "Y: " << y + 1<< std::endl;
   covered -= 1;
   uncovered +=1;
   board[y][x] = to_string(number);
