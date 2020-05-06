@@ -99,16 +99,19 @@ Agent::Action MyAI::getAction( int number )
         //first uncover remaining coords in checked
         if(checked.size() > 0)
         {
-          //deleted a for loop here because you only ever return
-          //the last "tuple" to uncover per getAction call
-          vector<int> zero = checked[checked.size() - 1];
-          checked.pop_back();
-          int new_x = zero[0];
-          int new_y = zero[1];
-          //deleted isCovered here because addZeroes have already checked that
-          x = new_x;
-          y = new_y;
-          return {UNCOVER, new_x, new_y};
+          for(int i = 0; i < checked.size(); i++)
+          {
+            vector<int> zero = checked[checked.size() - 1];
+            checked.pop_back();
+            int new_x = zero[0];
+            int new_y = zero[1];
+            if(isCovered(new_x, new_y))
+            {
+              x = new_x;
+              y = new_y;
+              return {UNCOVER, new_x, new_y};
+            }
+          }
         }
       }
 
@@ -212,7 +215,7 @@ void MyAI::fillBoard(int x, int y, int number)
   covered -= 1;
   uncovered +=1;
   board[y][x] = to_string(number);
-  printBoard();
+  //printBoard();
 }
 
 int MyAI::getType(int x, int y, string type)
