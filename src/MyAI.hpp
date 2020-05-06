@@ -35,15 +35,16 @@ public:
     MyAI ( int _rowDimension, int _colDimension, int _totalMines, int _agentX, int _agentY );
 
     Action getAction ( int number ) override;
-
-    void printBoard();
-    void addZeroes(int x, int y);
-    bool isCovered(int x, int y);
-    void fillBoard(int x, int y, int number);
-    int getType(int x, int y, string type);
+    
     // ======================================================================
     // YOUR CODE BEGINS
     // ======================================================================
+
+    void printBoard();
+    void addZeroes(int x, int y); //add "tuples" of x, y coordinates around a zero into vector checked
+    bool isCovered(int x, int y); //return true when tile x,y still has not been uncovered
+    void fillBoard(int x, int y, int number); //fill the x,y tile with number
+    int getType(int x, int y, string type); //returns how many of "type" surrounding tile x,y
 
 private:
     int row;

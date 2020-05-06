@@ -19,6 +19,7 @@
 
 #include "MyAI.hpp"
 
+//constructor
 MyAI::MyAI ( int _rowDimension, int _colDimension, int _totalMines, int _agentX, int _agentY ) : Agent()
 {
     // ======================================================================
@@ -27,10 +28,14 @@ MyAI::MyAI ( int _rowDimension, int _colDimension, int _totalMines, int _agentX,
     row = _rowDimension;
     col = _colDimension;
     mines = _totalMines;
-    x = _agentX;
-    y = _agentY;
+    x = _agentX; //initial zero coord
+    y = _agentY; //initial zero coord
     uncovered = 0;
     covered = row*col;
+
+    cout << _agentX << ',' << _agentY << endl;
+
+    //initialize 2D vector for board, fill the board with "."
     board.resize(row);
     for(int r = 0; r < row; r++)
     {
@@ -40,13 +45,12 @@ MyAI::MyAI ( int _rowDimension, int _colDimension, int _totalMines, int _agentX,
     }
 
 
-
-
     // ======================================================================
     // YOUR CODE ENDS
     // ======================================================================
 };
 
+//
 Agent::Action MyAI::getAction( int number )
 {
 
@@ -54,6 +58,8 @@ Agent::Action MyAI::getAction( int number )
     // YOUR CODE BEGINS
     // ======================================================================
     // double remaining_time = 0.0;
+
+    //fill the tile at x, y with number
     fillBoard(x, y, number);
 
     // cout << "ZEROES CHECKED GRID ----- " << endl;
@@ -63,6 +69,7 @@ Agent::Action MyAI::getAction( int number )
     //     std::cout << checked[size][c] + 1 << ' ';
     //   std::cout << std::endl;
     // }
+
 
     if(covered != mines)
     {
@@ -145,14 +152,17 @@ Agent::Action MyAI::getAction( int number )
 // YOUR CODE BEGINS
 // ======================================================================
 
+//helper functions
 void MyAI::printBoard()
+
+//x is row and y is col, i.e: [if x = 3, go down to 4th row, and y = 2, go right til 3rd col (start at 0)]
 {
-  // for(int r = row - 1; r >= 0; r--)
-  // {
-  //   for(int c = 0; c < col; c++)
-  //     std::cout << board[r][c] << ' ';
-  //   std::cout << std::endl;
-  // }
+  cout << endl;
+  for(int c = 0; c < col; c++){
+    for (int r = 0; r < row; r++)
+      std::cout << board[r][c] << ' ';
+    std::cout << std::endl;
+  }
 }
 
 void MyAI::addZeroes(int x, int y)
