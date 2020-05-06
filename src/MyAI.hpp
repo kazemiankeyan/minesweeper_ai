@@ -55,7 +55,7 @@ private:
     int uncovered;
     int covered;
     vector<vector<string>> board;
-    vector<vector<int>> checked;
+    set<vector<int>> checked;
 
     // ======================================================================
     // YOUR CODE ENDS

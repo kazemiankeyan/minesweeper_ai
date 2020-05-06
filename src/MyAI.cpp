@@ -97,21 +97,25 @@ Agent::Action MyAI::getAction( int number )
         //first uncover remaining coords in checked
         if(checked.size() > 0)
         {
-          for(int i = 0; i < checked.size(); i++)
+          //iterate through set checked
+          for(auto i: checked)
           {
-            vector<int> zero = checked[checked.size() - 1];
-            checked.pop_back();
+            //get the first "tuple", also remove it from the set
+            vector<int> zero = i;
+            checked.erase(i);
             int new_x = zero[0];
             int new_y = zero[1];
             if(isCovered(new_x, new_y))
             {
               x = new_x;
               y = new_y;
+              //uncover that tile
               return {UNCOVER, new_x, new_y};
             }
           }
         }
       }
+
 
       // cout << "LABEL: " << number << endl;
       // cout << "MARKED: " << marked << endl;
@@ -190,7 +194,7 @@ void MyAI::addZeroes(int x, int y)
         vector<int> zero;
         zero.push_back(new_x);
         zero.push_back(new_y);
-        checked.push_back(zero);
+        checked.insert(zero);
       }
     }
   }
