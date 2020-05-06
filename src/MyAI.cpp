@@ -33,8 +33,6 @@ MyAI::MyAI ( int _rowDimension, int _colDimension, int _totalMines, int _agentX,
     uncovered = 0;
     covered = row*col;
 
-    cout << _agentX << ',' << _agentY << endl;
-
     //initialize 2D vector for board, fill the board with "."
     board.resize(row);
     for(int r = 0; r < row; r++)
@@ -162,13 +160,11 @@ Agent::Action MyAI::getAction( int number )
 
 //helper functions
 void MyAI::printBoard()
-
-//x is col and y is row, i.e: [if x = 3, go right to 4th col, and y = 2, go down til 3rd row (start at 0)]
 {
-  cout << endl;
-  for(int c = 0; c < col; c++){
-    for (int r = 0; r < row; r++)
-      std::cout << board[c][r] << ' ';
+  for(int r = row - 1; r >= 0; r--)
+  {
+    for(int c = 0; c < col; c++)
+      std::cout << board[r][c] << ' ';
     std::cout << std::endl;
   }
 }
