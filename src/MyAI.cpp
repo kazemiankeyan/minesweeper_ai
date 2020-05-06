@@ -97,22 +97,16 @@ Agent::Action MyAI::getAction( int number )
         //first uncover remaining coords in checked
         if(checked.size() > 0)
         {
-          //iterate through set checked
-          for(auto i: checked)
-          {
-            //get the first "tuple", also remove it from the set
-            vector<int> zero = i;
-            checked.erase(i);
-            int new_x = zero[0];
-            int new_y = zero[1];
-            if(isCovered(new_x, new_y))
-            {
-              x = new_x;
-              y = new_y;
-              //uncover that tile
-              return {UNCOVER, new_x, new_y};
-            }
-          }
+          //get the first "tuple", also remove it from the set
+          vector<int> zero = *checked.begin(); //iterator that points to the beginning
+                                               //of the set, then dereference it to obtain value
+          checked.erase(zero);
+          int new_x = zero[0];
+          int new_y = zero[1];
+          x = new_x;
+          y = new_y;
+          //uncover that tile
+          return {UNCOVER, new_x, new_y};
         }
       }
 
@@ -189,7 +183,7 @@ void MyAI::addZeroes(int x, int y)
 
     if((new_x < col && new_x >= 0) && (new_y < row && new_y >= 0))
     {
-      if(board[new_y][new_x] == ".") //so this already checks for covered
+      if(isCovered(new_x, new_y))
       {
         vector<int> zero;
         zero.push_back(new_x);
