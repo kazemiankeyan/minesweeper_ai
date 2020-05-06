@@ -59,6 +59,7 @@ Agent::Action MyAI::getAction( int number )
     // ======================================================================
     // double remaining_time = 0.0;
 
+
     //fill the tile at x, y with number
     fillBoard(x, y, number);
 
@@ -70,42 +71,44 @@ Agent::Action MyAI::getAction( int number )
     //   std::cout << std::endl;
     // }
 
-
+    //if remaining tiles are not equal to amount of mines
     if(covered != mines)
     {
+      //count the flags around current tile
       int flags = getType(x, y, "-1");
+
       int marked = 0;
       for(int i = 0; i < 9; i++)
       {
         marked += getType(x, y, to_string(i));
       }
-      marked += flags;
+      marked += flags; //what is this supposed to be?
+
+      //effective is amount of potential bomb(s) minus flags around current tile
       int effective = number - flags;
-
+      //unmarked is number of tiles still covered around current tile
       int unmarked = getType(x, y, ".");
-
+      //if there are still covered tiles, and it is confirmed that there are no more bombs
       if(unmarked > 0 && effective == 0)
+        //add all the surrounding tiles into uncoverable vector
         addZeroes(x, y);
 
-      // uses the checked vector to uncover all boxes
-      // around a zero, keeps going till done.
+      //if theres no potential bomb around a tile and there are still tiles in checked to pop
       if(effective == 0 || checked.size() > 0)
       {
+        //first uncover remaining coords in checked
         if(checked.size() > 0)
         {
-          for(int i = 0; i < checked.size(); i++)
-          {
-            vector<int> zero = checked[checked.size() - 1];
-            checked.pop_back();
-            int new_x = zero[0];
-            int new_y = zero[1];
-            if(isCovered(new_x, new_y))
-            {
-              x = new_x;
-              y = new_y;
-              return {UNCOVER, new_x, new_y};
-            }
-          }
+          //deleted a for loop here because you only ever return
+          //the last "tuple" to uncover per getAction call
+          vector<int> zero = checked[checked.size() - 1];
+          checked.pop_back();
+          int new_x = zero[0];
+          int new_y = zero[1];
+          //deleted isCovered here because addZeroes have already checked that
+          x = new_x;
+          y = new_y;
+          return {UNCOVER, new_x, new_y};
         }
       }
 
@@ -119,18 +122,18 @@ Agent::Action MyAI::getAction( int number )
       // cout << "UNCOVERED: " << uncovered << endl;
       // cout << "CHECKED SIZE: " << checked.size() << endl;
 
-
+      //if the amount of potential bombs equal the
+      //number of tiles that are still uncovered
       if(effective==unmarked)
       {
         int adj8 [8][2] = {{-1, 1}, {-1, 0}, {1 , 1},
                           {-1, 0},           {1, 0},
                           {-1, -1}, {0, -1}, {1, -1}};
-
         for(int *n : adj8)
         {
           int new_x = x + n[1];
           int new_y = y + n[0];
-
+          //iterate through all the tiles around current tile and flag them
           if((new_x < col && new_x >= 0) && (new_y < row && new_y > 0) && isCovered(new_x, new_y))
           {
             x = new_x;
@@ -140,6 +143,8 @@ Agent::Action MyAI::getAction( int number )
         }
       }
     }
+
+
     return {LEAVE,-1,-1};
     // ======================================================================
     // YOUR CODE ENDS
@@ -155,12 +160,12 @@ Agent::Action MyAI::getAction( int number )
 //helper functions
 void MyAI::printBoard()
 
-//x is row and y is col, i.e: [if x = 3, go down to 4th row, and y = 2, go right til 3rd col (start at 0)]
+//x is col and y is row, i.e: [if x = 3, go right to 4th col, and y = 2, go down til 3rd row (start at 0)]
 {
   cout << endl;
   for(int c = 0; c < col; c++){
     for (int r = 0; r < row; r++)
-      std::cout << board[r][c] << ' ';
+      std::cout << board[c][r] << ' ';
     std::cout << std::endl;
   }
 }
@@ -181,7 +186,7 @@ void MyAI::addZeroes(int x, int y)
 
     if((new_x < col && new_x >= 0) && (new_y < row && new_y >= 0))
     {
-      if(board[new_y][new_x] == ".")
+      if(board[new_y][new_x] == ".") //so this already checks for covered
       {
         vector<int> zero;
         zero.push_back(new_x);
