@@ -154,7 +154,9 @@ Agent::Action MyAI::getAction( int number )
       // cout << "MINES: " << mines << endl;
       // cout << "UNCOVERED: " << uncovered << endl;
       // cout << "CHECKED SIZE: " << checked.size() << endl;
-
+        }
+      }
+    }
       //when checked is exhausted, start scanning the board to flag
       if (checked.size() == 0){
         for(int r = 0; r <row; r++){
@@ -210,9 +212,7 @@ Agent::Action MyAI::getAction( int number )
           }
         }
       }
-    }
-    }
-    } 
+
 
     if(frontier.size() > 0)
     {
