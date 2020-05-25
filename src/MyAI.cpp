@@ -130,12 +130,12 @@ Agent::Action MyAI::getAction( int number )
       if (checked.size() == 0){
         for(int r = 0; r <row; r++){
           for(int c = 0; c < col; c++){
-            if (getType(r, c, ".") > 0){ //if have uncovered around
+            if (getType(c, r, ".") > 0){ //if have uncovered around
               if (!(board[r][c] == "." || board[r][c] == "-1")){ //make sure current tile isnt covered and not a flag
                 effective = std::stoi(board[r][c]) - getType(r, c, "-1");
                 covered = getType(r, c, ".");
                 if (effective - covered == 0){
-                  addFlags(r, c);
+                  addFlags(c, r);
                 }
               }
             }
