@@ -175,6 +175,7 @@ Agent::Action MyAI::getAction( int number )
                   //uncover that tile
                   return {UNCOVER, new_x, new_y};
                 }
+              }
             }
           }
         }
