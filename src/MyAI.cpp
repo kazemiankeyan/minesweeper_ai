@@ -118,7 +118,6 @@ Agent::Action MyAI::getAction( int number )
       }
     }
 
-
     cout << "LABEL: " << number << endl;
     cout << "MARKED: " << marked << endl;
     cout << "UNMARKED: " << unmarked << endl;
@@ -146,6 +145,68 @@ Agent::Action MyAI::getAction( int number )
           x = new_x;
           y = new_y;
           return {FLAG, x, y};
+      // cout << "LABEL: " << number << endl;
+      // cout << "MARKED: " << marked << endl;
+      // cout << "UNMARKED: " << unmarked << endl;
+      // cout << "FLAGS: " << flags << endl;
+      // cout << "EFFECTIVE: " << effective << endl;
+      // cout << "COVERED: " << covered << endl;
+      // cout << "MINES: " << mines << endl;
+      // cout << "UNCOVERED: " << uncovered << endl;
+      // cout << "CHECKED SIZE: " << checked.size() << endl;
+
+      //when checked is exhausted, start scanning the board to flag
+      if (checked.size() == 0){
+        for(int r = 0; r <row; r++){
+          for(int c = 0; c < col; c++){
+            if (getType(c, r, ".") > 0){ //if have uncovered around
+              if (!(board[r][c] == "." || board[r][c] == "-1")){ //make sure current tile isnt covered and not a flag
+                effective = std::stoi(board[r][c]) - getType(c, r, "-1");
+                covered = getType(c, r, ".");
+                if (effective - covered == 0){
+                  addFlags(c, r);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      if(flagsSet.size() > 0)
+      {
+        //get the first "tuple", also remove it from the set
+        vector<int> flg = *flagsSet.begin(); //iterator that points to the beginning
+                                              //of the set, then dereference it to obtain value
+        flagsSet.erase(flg);
+        int new_x = flg[0];
+        int new_y = flg[1];
+        x = new_x;
+        y = new_y;
+        //uncover that tile
+        return {FLAG, new_x, new_y};
+      }
+
+      if (flagsSet.size() == 0){
+        for(int r = 0; r <row; r++){
+          for(int c = 0; c < col; c++){
+            if (getType(c, r, ".") > 0){ //if have uncovered around
+              if (!(board[r][c] == "." || board[r][c] == "-1")){ //make sure current tile isnt covered and not a flag
+                effective = std::stoi(board[r][c]) - getType(c, r, "-1");
+                if (effective == 0){
+                  addZeroes(c, r);
+                  vector<int> zero = *checked.begin(); //iterator that points to the beginning
+                                               //of the set, then dereference it to obtain value
+                  checked.erase(zero);
+                  int new_x = zero[0];
+                  int new_y = zero[1];
+                  x = new_x;
+                  y = new_y;
+                  //uncover that tile
+                  return {UNCOVER, new_x, new_y};
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -179,6 +240,7 @@ Agent::Action MyAI::getAction( int number )
         cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
       }
     }
+    
 
 
     cout << "no good moves left, do something random!" << endl;
@@ -267,6 +329,33 @@ void MyAI::addZeroes(int x, int y)
   }
 }
 
+void MyAI::addFlags(int x, int y)
+{
+  int adj8 [8][2] = {{-1, 1}, {0, 1}, {1 , 1},
+                    {-1, 0},           {1, 0},
+                    {-1, -1}, {0, -1}, {1, -1}};
+
+  for(int *n : adj8)
+  {
+    int new_x = x + n[1];
+    int new_y = y + n[0];
+
+    // cout << "NEW_X: " << new_x << endl;
+    // cout << "NEW_Y: " << new_y << endl;
+
+    if((new_x < col && new_x >= 0) && (new_y < row && new_y >= 0))
+    {
+      if(isCovered(new_x, new_y))
+      {
+        vector<int> flg;
+        flg.push_back(new_x);
+        flg.push_back(new_y);
+        flagsSet.insert(flg);
+      }
+    }
+  }
+}
+
 bool MyAI::isCovered(int x, int y)
 {
   if(board[y][x] == ".")
@@ -282,7 +371,7 @@ void MyAI::fillBoard(int x, int y, int number)
   covered -= 1;
   uncovered +=1;
   board[y][x] = to_string(number);
-  printBoard();
+  //printBoard();
 }
 
 int MyAI::getType(int x, int y, string type)
