@@ -132,6 +132,8 @@ Agent::Action MyAI::getAction( int number )
         for(int r = 0; r <row; r++){
           for(int c = 0; c < col; c++){
             if (!(board[r][c] == "-1" || board[r][c] == ".")){
+              std::cout << "current tile x:" << r << " y: " << c <<std::endl;
+              std::cout << "current value: " << board[r][c] << endl;
               effective = std::stoi(board[r][c]) - getType(r, c, "-1");
               unmarked = getType(r, c, ".");
               //if the amount of potential bombs equal the
