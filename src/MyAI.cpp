@@ -60,7 +60,6 @@ Agent::Action MyAI::getAction( int number )
 
     //fill the tile at x, y with number
     fillBoard(x, y, number);
-
     // cout << "ZEROES CHECKED GRID ----- " << endl;
     // for(int size = checked.size() - 1; size >= 0; size--)
     // {
@@ -82,16 +81,22 @@ Agent::Action MyAI::getAction( int number )
       }
       marked += flags; //what is this supposed to be?
 
+
       //effective is amount of potential bomb(s) minus flags around current tile
       int effective = number - flags;
       //unmarked is number of tiles still covered around current tile
       int unmarked = getType(x, y, ".");
+      // cout << "LABEL: " << number << endl;
+      // cout << "UNMARKED: " << unmarked << endl;
       //if there are still covered tiles, and it is confirmed that there are no more bombs
       if(unmarked > 0 && effective == 0)
         //add all the surrounding tiles into uncoverable vector
         addZeroes(x, y);
 
-      //if theres no potential bomb around a tile and there are still tiles in checked to pop
+
+      frontier.push({x, y, number, unmarked - number});
+
+      //if theres no potential bomb around a tile or there are still tiles in checked to pop
       if(effective == 0 || checked.size() > 0)
       {
         //first uncover remaining coords in checked
@@ -105,6 +110,7 @@ Agent::Action MyAI::getAction( int number )
           int new_y = zero[1];
           x = new_x;
           y = new_y;
+
           //uncover that tile
           return {UNCOVER, new_x, new_y};
         }
@@ -125,7 +131,7 @@ Agent::Action MyAI::getAction( int number )
       //number of tiles that are still uncovered
       if(effective==unmarked)
       {
-        int adj8 [8][2] = {{-1, 1}, {-1, 0}, {1 , 1},
+        int adj8 [8][2] = {{-1, 1}, {0, 1}, {1 , 1},
                           {-1, 0},           {1, 0},
                           {-1, -1}, {0, -1}, {1, -1}};
         for(int *n : adj8)
@@ -139,6 +145,36 @@ Agent::Action MyAI::getAction( int number )
             y = new_y;
             return {FLAG, x, y};
           }
+        }
+      }
+
+      if(frontier.size() > 0)
+      {
+        int s = frontier.size();
+        vector<vector<int>> holding;
+        holding.resize(s);
+        //re-evaluate entire priority queue with new board
+        for(int i = 0; i < s; i++)
+        {
+          vector<int> f = frontier.top();
+          frontier.pop();
+          holding[i].resize(4);
+          holding.push_back({f[0], f[1], f[2], f[2]-getType(f[0], f[1], ".")});
+          // cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
+        }
+
+        for(int i = 0; i < s; i++)
+        {
+          vector<int> f = holding[i];
+          // cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
+          frontier.push({f[0],f[1],f[2],f[3]});
+        }
+
+        for(int i = 0; i < s; i++)
+        {
+          vector<int> f = frontier.top();
+          frontier.pop();
+          // cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
         }
       }
     }
@@ -169,7 +205,7 @@ void MyAI::printBoard()
 
 void MyAI::addZeroes(int x, int y)
 {
-  int adj8 [8][2] = {{-1, 1}, {-1, 0}, {1 , 1},
+  int adj8 [8][2] = {{-1, 1}, {0, 1}, {1 , 1},
                     {-1, 0},           {1, 0},
                     {-1, -1}, {0, -1}, {1, -1}};
 
@@ -209,13 +245,13 @@ void MyAI::fillBoard(int x, int y, int number)
   covered -= 1;
   uncovered +=1;
   board[y][x] = to_string(number);
-  //printBoard();
+  printBoard();
 }
 
 int MyAI::getType(int x, int y, string type)
 {
   int type_count = 0;
-  int adj8 [8][2] = {{-1, 1}, {-1, 0}, {1 , 1},
+  int adj8 [8][2] = {{-1, 1}, {0, 1}, {1 , 1},
                     {-1, 0},           {1, 0},
                     {-1, -1}, {0, -1}, {1, -1}};
 

@@ -22,6 +22,7 @@
 
 #include "Agent.hpp"
 #include <iostream> // temporary use
+#include <queue> // for priority queue
 #include <vector>
 #include <map>
 #include <set>
@@ -35,7 +36,7 @@ public:
     MyAI ( int _rowDimension, int _colDimension, int _totalMines, int _agentX, int _agentY );
 
     Action getAction ( int number ) override;
-    
+
     // ======================================================================
     // YOUR CODE BEGINS
     // ======================================================================
@@ -56,6 +57,21 @@ private:
     int covered;
     vector<vector<string>> board;
     set<vector<int>> checked;
+
+    struct priority_comp
+    {
+      bool operator()(std::vector<int> const& a, std::vector<int> const& b) const
+      {
+        // sanity checks
+        assert(a.size() == 4);
+        assert(b.size() == 4);
+
+        // reverse sort puts the lowest value at the top
+        return a[3] > b[3];
+      }
+    };
+
+    priority_queue<vector<int>, vector<vector<int>>, priority_comp> frontier;
 
     // ======================================================================
     // YOUR CODE ENDS
