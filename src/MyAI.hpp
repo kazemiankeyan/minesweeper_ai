@@ -63,8 +63,8 @@ private:
       bool operator()(std::vector<int> const& a, std::vector<int> const& b) const
       {
         // sanity checks
-        assert(a.size() == 4);
-        assert(b.size() == 4);
+        // assert(a.size() == 4);
+        // assert(b.size() == 4);
 
         // reverse sort puts the lowest value at the top
         return a[3] > b[3];
