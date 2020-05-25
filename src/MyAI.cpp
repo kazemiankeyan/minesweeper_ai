@@ -127,25 +127,36 @@ Agent::Action MyAI::getAction( int number )
       // cout << "UNCOVERED: " << uncovered << endl;
       // cout << "CHECKED SIZE: " << checked.size() << endl;
 
-      //if the amount of potential bombs equal the
-      //number of tiles that are still uncovered
-      if(effective==unmarked)
-      {
-        int adj8 [8][2] = {{-1, 1}, {0, 1}, {1 , 1},
-                          {-1, 0},           {1, 0},
-                          {-1, -1}, {0, -1}, {1, -1}};
-        for(int *n : adj8)
-        {
-          int new_x = x + n[1];
-          int new_y = y + n[0];
-          //iterate through all the tiles around current tile and flag them
-          if((new_x < col && new_x >= 0) && (new_y < row && new_y > 0) && isCovered(new_x, new_y))
-          {
-            x = new_x;
-            y = new_y;
-            return {FLAG, x, y};
+      //when checked is exhausted, start scanning the board to flag
+      if (checked.size() == 0){
+        for(int r = row - 1; r >= 0; r--){
+          for(int c = 0; c < col; c++){
+            if (board[r][c] != "-1" || board[r][c] != "."){
+              effective = std::stoi(board[r][c]) - getType(r, c, "-1");
+              unmarked = getType(r, c, ".");
+              //if the amount of potential bombs equal the
+              //number of tiles that are still uncovered
+              if(effective==unmarked)
+              {
+                int adj8 [8][2] = {{-1, 1}, {0, 1}, {1 , 1},
+                                  {-1, 0},           {1, 0},
+                                  {-1, -1}, {0, -1}, {1, -1}};
+                for(int *n : adj8)
+                {
+                  int new_x = x + n[1];
+                  int new_y = y + n[0];
+                  //iterate through all the tiles around current tile and flag them
+                  if((new_x < col && new_x >= 0) && (new_y < row && new_y > 0) && isCovered(new_x, new_y))
+                  {
+                    x = new_x;
+                    y = new_y;
+                    return {FLAG, x, y};
+                }
+              }
+            }
           }
         }
+      }
       }
 
       if(frontier.size() > 0)
@@ -178,6 +189,7 @@ Agent::Action MyAI::getAction( int number )
         }
       }
     }
+    
 
 
     return {LEAVE,-1,-1};
