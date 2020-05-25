@@ -210,6 +210,8 @@ Agent::Action MyAI::getAction( int number )
         }
       }
     }
+    }
+    } 
 
     if(frontier.size() > 0)
     {
@@ -240,7 +242,7 @@ Agent::Action MyAI::getAction( int number )
         cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
       }
     }
-    
+
 
 
     cout << "no good moves left, do something random!" << endl;
