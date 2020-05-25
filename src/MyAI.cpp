@@ -306,7 +306,7 @@ void MyAI::fillBoard(int x, int y, int number)
   covered -= 1;
   uncovered +=1;
   board[y][x] = to_string(number);
-  printBoard();
+  //printBoard();
 }
 
 int MyAI::getType(int x, int y, string type)
