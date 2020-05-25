@@ -148,7 +148,7 @@ Agent::Action MyAI::getAction( int number )
         //get the first "tuple", also remove it from the set
         vector<int> flg = *flagsSet.begin(); //iterator that points to the beginning
                                               //of the set, then dereference it to obtain value
-        checked.erase(flg);
+        flagsSet.erase(flg);
         int new_x = flg[0];
         int new_y = flg[1];
         x = new_x;
