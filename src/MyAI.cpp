@@ -132,8 +132,8 @@ Agent::Action MyAI::getAction( int number )
           for(int c = 0; c < col; c++){
             if (getType(c, r, ".") > 0){ //if have uncovered around
               if (!(board[r][c] == "." || board[r][c] == "-1")){ //make sure current tile isnt covered and not a flag
-                effective = std::stoi(board[r][c]) - getType(r, c, "-1");
-                covered = getType(r, c, ".");
+                effective = std::stoi(board[r][c]) - getType(c, r, "-1");
+                covered = getType(c, r, ".");
                 if (effective - covered == 0){
                   addFlags(c, r);
                 }
@@ -155,6 +155,29 @@ Agent::Action MyAI::getAction( int number )
         y = new_y;
         //uncover that tile
         return {FLAG, new_x, new_y};
+      }
+
+      if (flagsSet.size() == 0){
+        for(int r = 0; r <row; r++){
+          for(int c = 0; c < col; c++){
+            if (getType(c, r, ".") > 0){ //if have uncovered around
+              if (!(board[r][c] == "." || board[r][c] == "-1")){ //make sure current tile isnt covered and not a flag
+                effective = std::stoi(board[r][c]) - getType(c, r, "-1");
+                if (effective == 0){
+                  addZeroes(c, r);
+                  vector<int> zero = *checked.begin(); //iterator that points to the beginning
+                                               //of the set, then dereference it to obtain value
+                  checked.erase(zero);
+                  int new_x = zero[0];
+                  int new_y = zero[1];
+                  x = new_x;
+                  y = new_y;
+                  //uncover that tile
+                  return {UNCOVER, new_x, new_y};
+                }
+            }
+          }
+        }
       }
 
       if(frontier.size() > 0)
