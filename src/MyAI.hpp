@@ -42,6 +42,7 @@ public:
     // ======================================================================
 
     void printBoard();
+    pair<int,int> nextCov(); // returns random uncovered pair in random order
     void addZeroes(int x, int y); //add "tuples" of x, y coordinates around a zero into vector checked
     bool isCovered(int x, int y); //return true when tile x,y still has not been uncovered
     void fillBoard(int x, int y, int number); //fill the x,y tile with number
