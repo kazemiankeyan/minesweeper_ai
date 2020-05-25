@@ -164,6 +164,7 @@ Agent::Action MyAI::getAction( int number )
               if (!(board[r][c] == "." || board[r][c] == "-1")){ //make sure current tile isnt covered and not a flag
                 effective = std::stoi(board[r][c]) - getType(c, r, "-1");
                 if (effective == 0){
+                  std::cout << "current tile x col: " << c << " y row: " << r << endl;
                   addZeroes(c, r);
                   vector<int> zero = *checked.begin(); //iterator that points to the beginning
                                                //of the set, then dereference it to obtain value
