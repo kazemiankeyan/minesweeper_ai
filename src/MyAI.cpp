@@ -118,15 +118,15 @@ Agent::Action MyAI::getAction( int number )
       }
     }
 
-    cout << "LABEL: " << number << endl;
-    cout << "MARKED: " << marked << endl;
-    cout << "UNMARKED: " << unmarked << endl;
-    cout << "FLAGS: " << flags << endl;
-    cout << "EFFECTIVE: " << effective << endl;
-    cout << "COVERED: " << covered << endl;
-    cout << "MINES: " << mines << endl;
-    cout << "UNCOVERED: " << uncovered << endl;
-    cout << "CHECKED SIZE: " << checked.size() << endl;
+    // cout << "LABEL: " << number << endl;
+    // cout << "MARKED: " << marked << endl;
+    // cout << "UNMARKED: " << unmarked << endl;
+    // cout << "FLAGS: " << flags << endl;
+    // cout << "EFFECTIVE: " << effective << endl;
+    // cout << "COVERED: " << covered << endl;
+    // cout << "MINES: " << mines << endl;
+    // cout << "UNCOVERED: " << uncovered << endl;
+    // cout << "CHECKED SIZE: " << checked.size() << endl;
 
     //if the amount of potential bombs equal the
     //number of tiles that are still uncovered
@@ -226,13 +226,13 @@ Agent::Action MyAI::getAction( int number )
         frontier.pop();
         holding[i].resize(4);
         holding.push_back({f[0], f[1], f[2], f[2]-getType(f[0], f[1], ".")});
-        cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
+        //cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
       }
 
       for(int i = 0; i < s; i++)
       {
         vector<int> f = holding[i];
-        cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
+        //cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
         frontier.push({f[0],f[1],f[2],f[3]});
       }
 
@@ -240,7 +240,7 @@ Agent::Action MyAI::getAction( int number )
       {
         vector<int> f = frontier.top();
         frontier.pop();
-        cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
+        //cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
       }
     }
 
