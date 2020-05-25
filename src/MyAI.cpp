@@ -129,9 +129,9 @@ Agent::Action MyAI::getAction( int number )
 
       //when checked is exhausted, start scanning the board to flag
       if (checked.size() == 0){
-        for(int r = row - 1; r >= 0; r--){
+        for(int r = 0; r <row; r++){
           for(int c = 0; c < col; c++){
-            if (board[r][c] != "-1" || board[r][c] != "."){
+            if (!(board[r][c] == "-1" || board[r][c] == ".")){
               effective = std::stoi(board[r][c]) - getType(r, c, "-1");
               unmarked = getType(r, c, ".");
               //if the amount of potential bombs equal the
