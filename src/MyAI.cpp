@@ -116,7 +116,6 @@ Agent::Action MyAI::getAction( int number )
         }
       }
 
-
       // cout << "LABEL: " << number << endl;
       // cout << "MARKED: " << marked << endl;
       // cout << "UNMARKED: " << unmarked << endl;
@@ -131,34 +130,31 @@ Agent::Action MyAI::getAction( int number )
       if (checked.size() == 0){
         for(int r = 0; r <row; r++){
           for(int c = 0; c < col; c++){
-            if (!(board[r][c] == "-1" || board[r][c] == ".")){
-              std::cout << "current tile x:" << r << " y: " << c <<std::endl;
-              std::cout << "current value: " << board[r][c] << endl;
-              effective = std::stoi(board[r][c]) - getType(r, c, "-1");
-              unmarked = getType(r, c, ".");
-              //if the amount of potential bombs equal the
-              //number of tiles that are still uncovered
-              if(effective==unmarked)
-              {
-                int adj8 [8][2] = {{-1, 1}, {0, 1}, {1 , 1},
-                                  {-1, 0},           {1, 0},
-                                  {-1, -1}, {0, -1}, {1, -1}};
-                for(int *n : adj8)
-                {
-                  int new_x = x + n[1];
-                  int new_y = y + n[0];
-                  //iterate through all the tiles around current tile and flag them
-                  if((new_x < col && new_x >= 0) && (new_y < row && new_y > 0) && isCovered(new_x, new_y))
-                  {
-                    x = new_x;
-                    y = new_y;
-                    return {FLAG, x, y};
+            if (getType(r, c, ".") > 0){ //if have uncovered around
+              if (!(board[r][c] == "." || board[r][c] == "-1")){ //make sure current tile isnt covered and not a flag
+                effective = std::stoi(board[r][c]) - getType(r, c, "-1");
+                covered = getType(r, c, ".");
+                if (effective - covered == 0){
+                  addFlags(r, c);
                 }
               }
             }
           }
         }
       }
+
+      if(flagsSet.size() > 0)
+      {
+        //get the first "tuple", also remove it from the set
+        vector<int> flg = *flagsSet.begin(); //iterator that points to the beginning
+                                              //of the set, then dereference it to obtain value
+        checked.erase(flg);
+        int new_x = flg[0];
+        int new_y = flg[1];
+        x = new_x;
+        y = new_y;
+        //uncover that tile
+        return {FLAG, new_x, new_y};
       }
 
       if(frontier.size() > 0)
@@ -239,6 +235,33 @@ void MyAI::addZeroes(int x, int y)
         zero.push_back(new_x);
         zero.push_back(new_y);
         checked.insert(zero);
+      }
+    }
+  }
+}
+
+void MyAI::addFlags(int x, int y)
+{
+  int adj8 [8][2] = {{-1, 1}, {0, 1}, {1 , 1},
+                    {-1, 0},           {1, 0},
+                    {-1, -1}, {0, -1}, {1, -1}};
+
+  for(int *n : adj8)
+  {
+    int new_x = x + n[1];
+    int new_y = y + n[0];
+
+    // cout << "NEW_X: " << new_x << endl;
+    // cout << "NEW_Y: " << new_y << endl;
+
+    if((new_x < col && new_x >= 0) && (new_y < row && new_y >= 0))
+    {
+      if(isCovered(new_x, new_y))
+      {
+        vector<int> flg;
+        flg.push_back(new_x);
+        flg.push_back(new_y);
+        flagsSet.insert(flg);
       }
     }
   }

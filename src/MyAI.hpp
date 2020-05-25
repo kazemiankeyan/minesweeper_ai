@@ -46,6 +46,7 @@ public:
     bool isCovered(int x, int y); //return true when tile x,y still has not been uncovered
     void fillBoard(int x, int y, int number); //fill the x,y tile with number
     int getType(int x, int y, string type); //returns how many of "type" surrounding tile x,y
+    void addFlags(int x, int y); //like add zeroes, but flags
 
 private:
     int row;
@@ -57,6 +58,7 @@ private:
     int covered;
     vector<vector<string>> board;
     set<vector<int>> checked;
+    set<vector<int>> flagsSet;
 
     struct priority_comp
     {
