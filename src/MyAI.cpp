@@ -69,6 +69,13 @@ Agent::Action MyAI::getAction( int number )
     //fill the tile at x, y with number
     fillBoard(x, y, number);
 
+    // cout << "LABEL: " << number << endl;
+    // cout << "ROW: " << row << endl;
+    // cout << "COL: " << col << endl;
+    // cout << "COVERED: " << covered << endl;
+    // cout << "MINES: " << mines << endl;
+    // cout << "UNCOVERED: " << uncovered << endl;
+
     // cout << "ZEROES CHECKED GRID ----- " << endl;
     // for(int size = checked.size() - 1; size >= 0; size--)
     // {
@@ -124,18 +131,6 @@ Agent::Action MyAI::getAction( int number )
         return {UNCOVER, new_x, new_y};
       }
     }
-
-    // cout << "LABEL: " << number << endl;
-    // cout << "ROW: " << row << endl;
-    // cout << "COL: " << col << endl;
-    // cout << "MARKED: " << marked << endl;
-    // cout << "UNMARKED: " << unmarked << endl;
-    // cout << "FLAGS: " << flags << endl;
-    // cout << "EFFECTIVE: " << effective << endl;
-    // cout << "COVERED: " << covered << endl;
-    // cout << "MINES: " << mines << endl;
-    // cout << "UNCOVERED: " << uncovered << endl;
-    // cout << "CHECKED SIZE: " << checked.size() << endl;
 
     //if the amount of potential bombs equal the
     //number of tiles that are still uncovered
@@ -271,6 +266,10 @@ Agent::Action MyAI::getAction( int number )
     for(int r = 0; r < row; r++)
       for(int c = 0; c < col; c++)
       {
+        // ======================================================================
+        // BEGINNING OF HARD CODED RULES
+        // ======================================================================
+
 
         // checking basic HORIZONTAL 1 1 PATTERNS NEXT TO AN EDGE (l stands for left, r for right, u for up, d for down)
         bool l_h_edge_11_u = (board[r][c] == "1" && c == 0 && r+1 < row && board[r][c+1] == "1");
@@ -321,13 +320,231 @@ Agent::Action MyAI::getAction( int number )
           }
         }
 
-        // adding to frontier
+        // checking basic VERTICAL 1 1 PATTERNS NEXT TO AN EDGE (l stands for left, r for right, u for up, d for down)
+        bool l_v_edge_11_d = (board[r][c] == "1" && r==row-1 && c-1>=0 && board[r-1][c]=="1");
+        if(l_v_edge_11_d)
+        {
+          if(board[r-2][c-1] == ".")
+          {
+            // cout << "horizontal edge 11 check" << endl;
+            x = c-1;
+            y = r-2;
+            return {UNCOVER, x, y};
+          }
+        }
+
+        bool r_v_edge_11_d = (board[r][c] == "1" && r==row-1 && c+1<col && board[r-1][c]=="1");
+        if(r_v_edge_11_d)
+        {
+          if(board[r-2][c+1] == ".")
+          {
+            // cout << "horizontal edge 11 check" << endl;
+            x = c+1;
+            y = r-2;
+            return {UNCOVER, x, y};
+          }
+        }
+
+        bool l_v_edge_11_u = (board[r][c] == "1" && r==0 && c-1>=0 && board[r+1][c]=="1");
+        if(l_v_edge_11_u)
+        {
+          if(board[r+2][c-1] == ".")
+          {
+            // cout << "horizontal edge 11 check" << endl;
+            x = c-1;
+            y = r+2;
+            return {UNCOVER, x, y};
+          }
+        }
+
+        bool r_v_edge_11_u = (board[r][c] == "1" && r==0 && c+1<col && board[r+1][c]=="1");
+        if(r_v_edge_11_u)
+        {
+          if(board[r+2][c+1] == ".")
+          {
+            // cout << "horizontal edge 11 check" << endl;
+            x = c+1;
+            y = r+2;
+            return {UNCOVER, x, y};
+          }
+        }
+
+        bool r_edge_v_11_u = (board[r][c] == "1" && c == col-1 && r+2<row && board[r+1][c]=="1");
+        if (r_edge_v_11_u)
+        {
+          if(board[r+2][c-1] == ".")
+          {
+            x = c-1;
+            y = r+2;
+            return {UNCOVER, x, y};
+          }
+        }
+
+        // special cases
+        bool l_v_12_u = (board[r][c] == "1" && r+1<row && r+2<row && c-1>=0 && board[r+1][c]=="2" && (board[r+2][c]!="." && board[r+2][c]!="-1" ));
+        if(l_v_12_u)
+        {
+            if(board[r+2][c-1] == ".")
+            {
+              cout << "left vertical 1 2 up check" << endl;
+              x = c-1;
+              y = r+2;
+              mines-=1;
+              return {FLAG, x, y};
+            }
+        }
+
+        // bool r_v_12_u = (board[r][c] == "1" && r+2<row && c+1 < col && board[r+1][c]=="2" && (board[r+2][c]!="-1" && board[r+2][c]!="." ));
+        // if(r_v_12_u)
+        // {
+        //   if(board[r+2][c+1] == ".")
+        //   {
+        //     cout << "right vertical 1 2 up check" << endl;
+        //     x = c+1;
+        //     y = r+2;
+        //     mines-=1;
+        //     return {FLAG, x, y};
+        //   }
+        // }
+
+        bool l_h_12_d = (board[r][c] == "1" && r-1>=0 && c+2<col && board[r][c+1]=="2" && (board[r][c+2]=="1" || board[r][c+2]=="2" )&& (board[r-1][c]=="." && board[r-1][c+1]=="." ));
+        if(l_h_12_d)
+        {
+          if(board[r-1][c+2] == ".")
+          {
+            cout << "left horizontal 1 2 down check" << endl;
+
+            x = c+2;
+            y = r-1;
+            mines-=1;
+            return {FLAG, x, y};
+          }
+        }
+
+        bool r_h_12_d = (board[r][c] == "1" && r-1>=0 && c-2>=0 && board[r][c-1]=="2" && (board[r][c-2]!="." && board[r][c-2]!="-1" ));
+        if(r_h_12_d)
+        {
+          if(board[r-1][c-2] == ".")
+          {
+            cout << "right horizontal 1 2 down check" << endl;
+
+            x = c-2;
+            y = r-1;
+            mines-=1;
+            return {FLAG, x, y};
+          }
+        }
+
+        bool r_h_12_u = (board[r][c] == "1" && r+1<row && c+2<col && c-1>=0 && board[r][c+1]=="2" && (board[r][c+2]!="." && board[r][c+2]!="-1")&&(board[r][c-1]!="." && board[r][c-1]!="-1"));
+        if(r_h_12_u)
+        {
+          if(board[r+1][c+2] == ".")
+          {
+            cout << "right horizontal 1 2 up check" << endl;
+
+            x = c+2;
+            y = r+1;
+            mines-=1;
+            return {FLAG, x, y};
+          }
+        }
+
+        bool l_h_12_u = (board[r][c] == "1" && r+1<row && c-2>=0 && board[r][c-1]=="2" && (board[r][c-2]!="." && board[r][c-2]!="-1"));
+        if(l_h_12_u)
+        {
+          if(board[r+1][c-2] == ".")
+          {
+            cout << "left horizontal 1 2 up check" << endl;
+
+            x = c-2;
+            y = r+1;
+            mines-=1;
+            return {FLAG, x, y};
+          }
+        }
+
+        // bool ledge_h_12_u = (board[r][c] == "1" && r+1<row && c==col-1 && board[r][c-1]=="2" && (board[r][c-2]!="." && board[r][c-2]!="-1"));
+        // if(ledge_h_12_u)
+        // {
+        //   if(board[r+1][c-2] == ".")
+        //   {
+        //     x = c-2;
+        //     y = r+1;
+        //     mines-=1;
+        //     return {FLAG, x, y};
+        //   }
+        // }
+
+        // bool l_v_12_d = (board[r][c] == "1" && r-2>=0 && c-1>=0 && board[r-1][c]=="2" && (board[r-2][c]=="1" || board[r-2][c]=="2"));
+        // if(l_v_12_d)
+        // {
+        //   if(board[r-2][c-1] == ".")
+        //   {
+        //     x = c-1;
+        //     y = r-2;
+        //     mines-=1;
+        //     return {FLAG, x, y};
+        //   }
+        // }
+
+        // bool d_h_12 = (board[r][c] == "1" && r-1>=0 && c+2<col && c-1>=0 && board[r][c+1]=="2" && (board[r][c-1] == "1" || board[r][c-1] != "2" )&& (board[r][c+1] == "1" || board[r][c+1] == "2"));
+        // if (d_h_12)
+        // {
+        //   if(board[r-1][c+2] == ".")
+        //   {
+        //     x = c+2;
+        //     y = r-1;
+        //     mines-=1;
+        //     return {FLAG, x, y};
+        //   }
+        // }
+
+        bool r_v_121 = (board[r][c] == "1" && r+2<row && c+1<col && board[r+1][c] == "2" && board[r+2][c] == "1");
+        if (r_v_121)
+        {
+          if(board[r+2][c+1] == ".")
+          {
+            cout << "right vertical 121 check" << endl;
+            x = c+1;
+            y = r+2;
+            mines-=1;
+            return {FLAG, x, y};
+          }
+          if(board[r][c+1] == ".")
+          {
+            cout << "right vertical 121 check" << endl;
+            x = c+1;
+            y = r;
+            mines-=1;
+            return {FLAG, x, y};
+          }
+        }
+
+        // bool l_v_12_f = (board[r][c] == "1" && r+1<row && r+2<row && c-1>=0 && board[r+1][c]=="2" && (board[r+2][c]=="1" || board[r+2][c]=="2" ));
+        // if (l_v_12_f)
+        // {
+        //   if(board[r+2][c-1] == "-1" && board[r][c-1] == ".")
+        //   {
+        //     cout << "left vertical 12 flag" << endl;
+        //
+        //     x = c-1;
+        //     y = r;
+        //     return {FLAG, x, y};
+        //   }
+        // }
+
+        // ======================================================================
+        // END OF HARD CODED RULES
+        // ======================================================================
+
+
+        // adding to frontier for guessing
         if(board[r][c] == ".")
         {
           int marked_num = 0;
-          for(int i = 0; i < 9; i++)
+          for(int i = -1; i < 9; i++)
           {
-            marked_num += i * getType(c, r, to_string(i));
+            marked_num += abs(i * getType(c, r, to_string(i)));
           }
           if(marked_num > 0)
           {
@@ -350,6 +567,7 @@ Agent::Action MyAI::getAction( int number )
     // }
     while(frontier.size() > 0)
     {
+      // cout << "CURRENTLY GUESSING!" << endl;
       vector<int> f = frontier.top();
       frontier.pop();
       if(board[f[1]][f[0]] == ".")
@@ -359,6 +577,8 @@ Agent::Action MyAI::getAction( int number )
         return {UNCOVER, x, y};
       }
     }
+    // cout << "------------BOARD------------" << endl;
+    // printBoard();
     return {LEAVE, -1 , -1};
 
 
