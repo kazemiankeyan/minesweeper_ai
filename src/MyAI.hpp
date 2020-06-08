@@ -61,6 +61,7 @@ private:
     vector<vector<string>> pboard;
     set<vector<int>> checked;
     set<vector<int>> flagsSet;
+    set<vector<int>> overlap;
 
     struct priority_comp
     {

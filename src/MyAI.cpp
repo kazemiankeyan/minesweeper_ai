@@ -577,6 +577,50 @@ Agent::Action MyAI::getAction( int number )
         return {UNCOVER, x, y};
       }
     }
+    //check >=2 here
+    int adj8 [8][2] = {{-1, 1}, {0, 1}, {1 , 1},
+              {-1, 0},           {1, 0},
+              {-1, -1}, {0, -1}, {1, -1}};
+    vector<int> safe;
+    //if current tile has 3 uncovered AND effective >= 2:
+    if (effective >= 2 && getType(c, r, ".") == 3){
+      //put all uncovered into overlap set
+      set<vector<int>> cur_overlap = overlap;
+      //iterate thru all tiles around to find number*
+      for(int *n : adj8)
+      {
+        int new_x = c + n[1];
+        int new_y = r + n[0];
+
+        if((new_x < c && new_x >= 0) && (new_y < r && new_y >= 0))
+        {
+          if (!(board[new_y][new_x] == "." || board[new_y][new_x] == "-1")){
+          //if effective of number* is > effective, and that num has 3 uncovered
+          int cur_effective = std::stoi(board[new_y][new_x]) - getType(new_x, new_y, "-1");
+          if ((cur_effective > effective) && (getType(new_x, new_y, ".") == 3)){
+            //get a covered* set (of coordinates) of that number
+            int count = 0;
+            for (auto elem: overlap){ //note here that overlap is updated to contain covered of the new coord
+              //check if there are 2 overlaps (or 2 elem in overlap also in cur_overlap)
+              if (cur_overlap.find(elem) != cur_overlap.end()){
+                count +=1;
+                cur_overlap.erase(elem);
+              }else{
+                safe = elem;
+              }
+            }
+            if (count == 2){
+              checked.insert(safe);
+              //return flag the non overlap in cur_overlap
+              vector<int> to_flag = *cur_overlap.begin();
+              return {FLAG, to_flag[0], to_flag[1]};
+            }
+
+            }
+          }
+        }
+      }
+    
     // cout << "------------BOARD------------" << endl;
     // printBoard();
     return {LEAVE, -1 , -1};
@@ -716,6 +760,7 @@ int MyAI::getType(int x, int y, string type)
   int adj8 [8][2] = {{-1, 1}, {0, 1}, {1 , 1},
                     {-1, 0},           {1, 0},
                     {-1, -1}, {0, -1}, {1, -1}};
+  overlap.clear();
 
   for(int *n : adj8)
   {
@@ -726,6 +771,13 @@ int MyAI::getType(int x, int y, string type)
     {
       if(board[new_y][new_x] == type)
         type_count++;
+        //add coord into coord set
+        if (type == "."){
+          vector<int> tile;
+          tile.push_back(new_x);
+          tile.push_back(new_y);
+          overlap.insert(tile);
+        }
     }
   }
 
