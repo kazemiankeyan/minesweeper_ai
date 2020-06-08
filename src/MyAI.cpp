@@ -596,6 +596,7 @@ Agent::Action MyAI::getAction( int number )
           }
         }
       }
+      }
 
 
     // if(frontier.size() > 0)
