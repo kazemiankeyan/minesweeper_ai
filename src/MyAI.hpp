@@ -58,6 +58,7 @@ private:
     int uncovered;
     int covered;
     vector<vector<string>> board;
+    vector<vector<string>> pboard;
     set<vector<int>> checked;
     set<vector<int>> flagsSet;
 

@@ -42,6 +42,14 @@ MyAI::MyAI ( int _rowDimension, int _colDimension, int _totalMines, int _agentX,
         board[r][c] = ".";
     }
 
+    pboard.resize(row);
+    for(int r = 0; r < row; r++)
+    {
+      pboard[r].resize(col);
+      for(int c = 0; c < col; c++)
+        pboard[r][c] = ".";
+    }
+
 
     // ======================================================================
     // YOUR CODE ENDS
@@ -263,76 +271,57 @@ Agent::Action MyAI::getAction( int number )
     for(int r = 0; r < row; r++)
       for(int c = 0; c < col; c++)
       {
-        // bool h_edge_11 = (board[r][c] == "1" && c == 0 && r+1 < row && board[r][c+1] == "1");
-        // if(h_edge_11)
-        // {
-        //   if(board[r+1][c+2] == ".")
-        //   {
-        //     cout << "horizontal edge 11 check" << endl;
-        //     x = c+2;
-        //     y = r+1;
-        //     return {UNCOVER, x, y};
-        //   }
-        // }
-        //
-        // bool h_open_11 = (board[r][c] == "1" && c-1 >= 0 && c+1 < col && c+2 < col && r+1 < row && board[r][c+1] == "1" && board[r+1][c-1] != "." && board[r+1][c-1] != "-1" && board[r][c-1] != "." && board[r][c-1] != "-1");
-        // if(h_open_11)
-        // {
-        //   if(board[r+1][c+2] == ".")
-        //   {
-        //     cout << "horizontal open 11 check" << endl;
-        //     x = c+2;
-        //     y = r+1;
-        //     return {UNCOVER, x, y};
-        //   }
-        // }
-        //
-        // bool h_edge_12_u = (board[r][c] == "1" && c == 0 && r+1 < row && board[r][c+1] == "2");
-        //
-        // if(h_edge_12_u)
-        // {
-        //   if(board[r+1][c+2] == ".")
-        //   {
-        //     cout << "horizontal edge 12 check up" << endl;
-        //     x = c+2;
-        //     y = r+1;
-        //     mines-=1;
-        //     return {FLAG, x, y};
-        //   }
-        // }
-        //
-        // bool h_edge_12_d = (board[r][c] == "1" && c == 0 && r-1 >= 0 && board[r][c+1] == "2");
-        //
-        // if(h_edge_12_d)
-        // {
-        //   if(board[r-1][c+2] == ".")
-        //   {
-        //     cout << "horizontal edge 12 check down" << endl;
-        //     x = c+2;
-        //     y = r-1;
-        //     mines-=1;
-        //     return {FLAG, x, y};
-        //   }
-        // }
-        //
-        // bool h_121_1 = (board[r][c] == "1" && (c+1 < col) && board[r][c+1] == "2" && (c+2 < col));
-        // bool v_121_1 = (board[r][c] == "1" && (r+1 < row) && board[r+1][c] == "2" && (r+2 < row));
-        // bool v_121_2 = (board[r][c] == "2" && (r+1 < row) && board[r+1][c] == "1" && (r-1 < row));
-        //
-        // bool h_111 = (board[r][c] == "1" && (r+1 < row) && (c-1 >= 0) && (c+1 < col) && board[r][c+1] == "1" && board[r][c-1] == "1");
 
-        // if(h_111)
-        // {
-        //   if(board[r+1][c] == ".")
-        //   {
-        //     cout << "horizontal 111 check" << endl;
-        //     x = c;
-        //     y = r+1;
-        //     mines-=1;
-        //     return {FLAG, x, y};
-        //   }
-        // }
+        // checking basic HORIZONTAL 1 1 PATTERNS NEXT TO AN EDGE (l stands for left, r for right, u for up, d for down)
+        bool l_h_edge_11_u = (board[r][c] == "1" && c == 0 && r+1 < row && board[r][c+1] == "1");
+        if(l_h_edge_11_u)
+        {
+          if(board[r+1][c+2] == ".")
+          {
+            // cout << "horizontal edge 11 check" << endl;
+            x = c+2;
+            y = r+1;
+            return {UNCOVER, x, y};
+          }
+        }
 
+        bool l_h_edge_11_d = (board[r][c] == "1" && c == 0 && r-1 >= 0 && board[r][c+1] == "1");
+        if(l_h_edge_11_d)
+        {
+          if(board[r-1][c+2] == ".")
+          {
+            // cout << "horizontal edge 11 check" << endl;
+            x = c+2;
+            y = r-1;
+            return {UNCOVER, x, y};
+          }
+        }
+
+        bool r_h_edge_11_u = (board[r][c] == "1" && c == col-1 && r+1 < row && board[r][c-1] == "1");
+        if(r_h_edge_11_u)
+        {
+          if(board[r+1][c-2] == ".")
+          {
+            // cout << "horizontal edge 11 check" << endl;
+            x = c-2;
+            y = r+1;
+            return {UNCOVER, x, y};
+          }
+        }
+
+        bool r_h_edge_11_d = (board[r][c] == "1" && c == col-1 && r-1 >= 0 && board[r][c-1] == "1");
+        if(r_h_edge_11_d)
+        {
+          if(board[r-1][c-2] == ".")
+          {
+            // cout << "horizontal edge 11 check" << endl;
+            x = c-2;
+            y = r-1;
+            return {UNCOVER, x, y};
+          }
+        }
+
+        // adding to frontier
         if(board[r][c] == ".")
         {
           int marked_num = 0;
@@ -342,6 +331,7 @@ Agent::Action MyAI::getAction( int number )
           }
           if(marked_num > 0)
           {
+            //c is x, r is y, marked_num is priority in priority queue
             frontier.push({c, r, marked_num});
           }
         }
