@@ -69,10 +69,10 @@ Agent::Action MyAI::getAction( int number )
     //   std::cout << std::endl;
     // }
     //if remaining tiles are not equal to amount of mines
-    if(mines == 0)
-    {
-      return {LEAVE, -1, -1};
-    }
+    // if(uncovered == row*col)
+    // {
+    //   return {LEAVE, -1, -1};
+    // }
     //count the flags around current tile
     int flags = getType(x, y, "-1");
 
@@ -96,7 +96,6 @@ Agent::Action MyAI::getAction( int number )
       addZeroes(x, y);
 
 
-    frontier.push({x, y, number, unmarked - number});
 
     //if theres no potential bomb around a tile or there are still tiles in checked to pop
     if(effective == 0 || checked.size() > 0)
@@ -118,15 +117,17 @@ Agent::Action MyAI::getAction( int number )
       }
     }
 
-    cout << "LABEL: " << number << endl;
-    cout << "MARKED: " << marked << endl;
-    cout << "UNMARKED: " << unmarked << endl;
-    cout << "FLAGS: " << flags << endl;
-    cout << "EFFECTIVE: " << effective << endl;
-    cout << "COVERED: " << covered << endl;
-    cout << "MINES: " << mines << endl;
-    cout << "UNCOVERED: " << uncovered << endl;
-    cout << "CHECKED SIZE: " << checked.size() << endl;
+    // cout << "LABEL: " << number << endl;
+    // cout << "ROW: " << row << endl;
+    // cout << "COL: " << col << endl;
+    // cout << "MARKED: " << marked << endl;
+    // cout << "UNMARKED: " << unmarked << endl;
+    // cout << "FLAGS: " << flags << endl;
+    // cout << "EFFECTIVE: " << effective << endl;
+    // cout << "COVERED: " << covered << endl;
+    // cout << "MINES: " << mines << endl;
+    // cout << "UNCOVERED: " << uncovered << endl;
+    // cout << "CHECKED SIZE: " << checked.size() << endl;
 
     //if the amount of potential bombs equal the
     //number of tiles that are still uncovered
@@ -144,6 +145,7 @@ Agent::Action MyAI::getAction( int number )
         {
           x = new_x;
           y = new_y;
+          mines-=1;
           return {FLAG, x, y};
       // cout << "LABEL: " << number << endl;
       // cout << "MARKED: " << marked << endl;
@@ -185,6 +187,7 @@ Agent::Action MyAI::getAction( int number )
         x = new_x;
         y = new_y;
         //uncover that tile
+        mines-=1;
         return {FLAG, new_x, new_y};
       }
 
@@ -195,7 +198,7 @@ Agent::Action MyAI::getAction( int number )
               if (!(board[r][c] == "." || board[r][c] == "-1")){ //make sure current tile isnt covered and not a flag
                 effective = std::stoi(board[r][c]) - getType(c, r, "-1");
                 if (effective == 0){
-                  std::cout << "current tile x col: " << c << " y row: " << r << endl;
+                  // std::cout << "current tile x col: " << c << " y row: " << r << endl;
                   addZeroes(c, r);
                   vector<int> zero = *checked.begin(); //iterator that points to the beginning
                                                //of the set, then dereference it to obtain value
@@ -213,50 +216,169 @@ Agent::Action MyAI::getAction( int number )
         }
       }
 
+    // if(frontier.size() > 0)
+    // {
+    //   int s = frontier.size();
+    //   vector<vector<int>> holding;
+    //   holding.resize(s);
+    //   //re-evaluate entire priority queue with new board
+    //   for(int i = 0; i < s; i++)
+    //   {
+    //     vector<int> f = frontier.top();
+    //     frontier.pop();
+    //     holding[i].resize(4);
+    //     holding.push_back({f[0], f[1], f[2], f[2]-getType(f[0], f[1], ".")});
+    //     cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
+    //   }
+    //
+    //   for(int i = 0; i < s; i++)
+    //   {
+    //     vector<int> f = holding[i];
+    //     cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
+    //     frontier.push({f[0],f[1],f[2],f[3]});
+    //   }
+    //
+    //   // for(int i = 0; i < s; i++)
+    //   // {
+    //   //   vector<int> f = frontier.top();
+    //   //   frontier.pop();
+    //   //   cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
+    //   // }
+    // }
+    // cout << "no good moves left, make an educated guess" << endl;
 
     if(frontier.size() > 0)
     {
       int s = frontier.size();
-      vector<vector<int>> holding;
-      holding.resize(s);
-      //re-evaluate entire priority queue with new board
       for(int i = 0; i < s; i++)
       {
         vector<int> f = frontier.top();
         frontier.pop();
-        holding[i].resize(4);
-        holding.push_back({f[0], f[1], f[2], f[2]-getType(f[0], f[1], ".")});
-        cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
-      }
-
-      for(int i = 0; i < s; i++)
-      {
-        vector<int> f = holding[i];
-        cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
-        frontier.push({f[0],f[1],f[2],f[3]});
-      }
-
-      for(int i = 0; i < s; i++)
-      {
-        vector<int> f = frontier.top();
-        frontier.pop();
-        cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " label: " << f[2] << " priority: " << f[3] << endl;
+        // cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " priority: " << f[2] << endl;
       }
     }
 
 
 
-    cout << "no good moves left, do something random!" << endl;
+    for(int r = 0; r < row; r++)
+      for(int c = 0; c < col; c++)
+      {
+        // bool h_edge_11 = (board[r][c] == "1" && c == 0 && r+1 < row && board[r][c+1] == "1");
+        // if(h_edge_11)
+        // {
+        //   if(board[r+1][c+2] == ".")
+        //   {
+        //     cout << "horizontal edge 11 check" << endl;
+        //     x = c+2;
+        //     y = r+1;
+        //     return {UNCOVER, x, y};
+        //   }
+        // }
+        //
+        // bool h_open_11 = (board[r][c] == "1" && c-1 >= 0 && c+1 < col && c+2 < col && r+1 < row && board[r][c+1] == "1" && board[r+1][c-1] != "." && board[r+1][c-1] != "-1" && board[r][c-1] != "." && board[r][c-1] != "-1");
+        // if(h_open_11)
+        // {
+        //   if(board[r+1][c+2] == ".")
+        //   {
+        //     cout << "horizontal open 11 check" << endl;
+        //     x = c+2;
+        //     y = r+1;
+        //     return {UNCOVER, x, y};
+        //   }
+        // }
+        //
+        // bool h_edge_12_u = (board[r][c] == "1" && c == 0 && r+1 < row && board[r][c+1] == "2");
+        //
+        // if(h_edge_12_u)
+        // {
+        //   if(board[r+1][c+2] == ".")
+        //   {
+        //     cout << "horizontal edge 12 check up" << endl;
+        //     x = c+2;
+        //     y = r+1;
+        //     mines-=1;
+        //     return {FLAG, x, y};
+        //   }
+        // }
+        //
+        // bool h_edge_12_d = (board[r][c] == "1" && c == 0 && r-1 >= 0 && board[r][c+1] == "2");
+        //
+        // if(h_edge_12_d)
+        // {
+        //   if(board[r-1][c+2] == ".")
+        //   {
+        //     cout << "horizontal edge 12 check down" << endl;
+        //     x = c+2;
+        //     y = r-1;
+        //     mines-=1;
+        //     return {FLAG, x, y};
+        //   }
+        // }
+        //
+        // bool h_121_1 = (board[r][c] == "1" && (c+1 < col) && board[r][c+1] == "2" && (c+2 < col));
+        // bool v_121_1 = (board[r][c] == "1" && (r+1 < row) && board[r+1][c] == "2" && (r+2 < row));
+        // bool v_121_2 = (board[r][c] == "2" && (r+1 < row) && board[r+1][c] == "1" && (r-1 < row));
+        //
+        // bool h_111 = (board[r][c] == "1" && (r+1 < row) && (c-1 >= 0) && (c+1 < col) && board[r][c+1] == "1" && board[r][c-1] == "1");
 
-    pair<int, int> next = nextCov();
-    if(next.first != -1)
+        // if(h_111)
+        // {
+        //   if(board[r+1][c] == ".")
+        //   {
+        //     cout << "horizontal 111 check" << endl;
+        //     x = c;
+        //     y = r+1;
+        //     mines-=1;
+        //     return {FLAG, x, y};
+        //   }
+        // }
+
+        if(board[r][c] == ".")
+        {
+          int marked_num = 0;
+          for(int i = 0; i < 9; i++)
+          {
+            marked_num += i * getType(c, r, to_string(i));
+          }
+          if(marked_num > 0)
+          {
+            frontier.push({c, r, marked_num});
+          }
+        }
+      }
+
+
+    // if(frontier.size() > 0)
+    // {
+    //   int s = frontier.size();
+    //   for(int i = 0; i < s; i++)
+    //   {
+    //     vector<int> f = frontier.top();
+    //     frontier.pop();
+    //     cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " priority: " << f[2] << endl;
+    //   }
+    // }
+    while(frontier.size() > 0)
     {
-      x = next.first;
-      y = next.second;
-      return {UNCOVER, x, y};
+      vector<int> f = frontier.top();
+      frontier.pop();
+      if(board[f[1]][f[0]] == ".")
+      {
+        x = f[0];
+        y = f[1];
+        return {UNCOVER, x, y};
+      }
     }
-    else
-      return {LEAVE, -1 , -1};
+    return {LEAVE, -1 , -1};
+
+
+    // pair<int, int> next = nextCov(x, y);
+    // if(next.first != -1)
+    // {
+    //   x = next.first;
+    //   y = next.second;
+    //   return {UNCOVER, x, y};
+    // }
 
 
     // ======================================================================
@@ -280,7 +402,7 @@ void MyAI::printBoard()
   }
 }
 
-pair<int, int> MyAI::nextCov()
+pair<int, int> MyAI::nextCov(int target_x, int target_y)
 {
   int adj8 [8][2] = {{-1, 1}, {0, 1}, {1 , 1},
                     {-1, 0},           {1, 0},
@@ -288,8 +410,8 @@ pair<int, int> MyAI::nextCov()
 
   for(int *n : adj8)
   {
-    int new_x = x + n[1];
-    int new_y = y + n[0];
+    int new_x = target_x + n[1];
+    int new_y = target_y + n[0];
 
     // cout << "NEW_X: " << new_x << endl;
     // cout << "NEW_Y: " << new_y << endl;
@@ -374,7 +496,8 @@ void MyAI::fillBoard(int x, int y, int number)
   covered -= 1;
   uncovered +=1;
   board[y][x] = to_string(number);
-  //printBoard();
+  // cout << "------------BOARD------------" << endl;
+  // printBoard();
 }
 
 int MyAI::getType(int x, int y, string type)

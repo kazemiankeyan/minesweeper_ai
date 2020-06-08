@@ -42,7 +42,7 @@ public:
     // ======================================================================
 
     void printBoard();
-    pair<int,int> nextCov(); // returns random uncovered pair in random order
+    pair<int,int> nextCov(int target_x, int target_y); // returns random uncovered pair in random order
     void addZeroes(int x, int y); //add "tuples" of x, y coordinates around a zero into vector checked
     bool isCovered(int x, int y); //return true when tile x,y still has not been uncovered
     void fillBoard(int x, int y, int number); //fill the x,y tile with number
@@ -70,7 +70,7 @@ private:
         // assert(b.size() == 4);
 
         // reverse sort puts the lowest value at the top
-        return a[3] > b[3];
+        return a[2] > b[2];
       }
     };
 
