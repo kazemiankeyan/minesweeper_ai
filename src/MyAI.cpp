@@ -317,7 +317,7 @@ Agent::Action MyAI::getAction( int number )
       } //for loops closing brackets
     }
 
-    cout << 'out of this heuristic, begin hardcodes' << endl;
+    cout << "out of this heuristic, begin hardcodes" << endl;
 
     for(int r = 0; r < row; r++){
       for(int c = 0; c < col; c++)
