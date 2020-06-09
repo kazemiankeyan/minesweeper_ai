@@ -279,7 +279,7 @@ Agent::Action MyAI::getAction( int number )
           if (eff >= 2 && getType(c, r, ".") == 3){
             //put all uncovered into cur_overlap set
             set<vector<int>> cur_overlap = overlap;
-            cout << "col: " << to_string(c+1) << "row: " << to_string(r+1) << endl;
+            cout << "col: " << to_string(c+1) << " row: " << to_string(r+1) << endl;
             //iterate thru all tiles around to find number*
             for(int *n : adj8)
             {
@@ -291,11 +291,11 @@ Agent::Action MyAI::getAction( int number )
                 //check if number, if yes
                 if (!(board[new_y][new_x] == "." || board[new_y][new_x] == "-1")){
                   
-                cout << "col: " << to_string(new_x+1) << "row: " << to_string(new_y+1) << endl;
+                cout << "colz: " << to_string(new_x+1) << " rowz: " << to_string(new_y+1) << endl;
                 //if effective of number* is less than effective, and that num has 3 uncovered
                 int cur_effective = std::stoi(board[new_y][new_x]) - getType(new_x, new_y, "-1");
-                cout << "cur_effective should be 1: " << to_string(cur_effective) << endl;
                 if ((cur_effective < eff) && (getType(new_x, new_y, ".") == 3)){
+                  cout << "cur_effective should be 1: " << to_string(cur_effective) << endl;
                   //get a covered* set (of coordinates) of that number
                   int count = 0;
                   for (auto elem: overlap){ //note here that overlap is updated to contain covered of the new coord
