@@ -285,8 +285,8 @@ Agent::Action MyAI::getAction( int number )
             {
               int new_x = c + n[1];
               int new_y = r + n[0];
-              cout << "nx: " << to_string(new_x) << " ny: " << to_string(new_y) << endl;
-              if((new_x < c && new_x >= 0) && (new_y < r && new_y >= 0)) //within boundary
+              cout << "nx: " << to_string(new_x+1) << " ny: " << to_string(new_y+1) << endl;
+              if((new_x < col && new_x >= 0) && (new_y < row && new_y >= 0)) //within boundary
               {
                 //check if number, if yes
                 if (!(board[new_y][new_x] == "." || board[new_y][new_x] == "-1")){
