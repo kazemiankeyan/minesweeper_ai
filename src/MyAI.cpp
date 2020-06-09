@@ -265,10 +265,6 @@ Agent::Action MyAI::getAction( int number )
     for(int r = 0; r < row; r++){
       for(int c = 0; c < col; c++)
       {
-        // ======================================================================
-        // BEGINNING OF HARD CODED RULES
-        // ======================================================================
-        //check >=2 here
         int adj8 [8][2] = {{-1, 1}, {0, 1}, {1 , 1},
                   {-1, 0},           {1, 0},
                   {-1, -1}, {0, -1}, {1, -1}};
@@ -277,7 +273,6 @@ Agent::Action MyAI::getAction( int number )
           int eff = std::stoi(board[r][c]) - getType(c, r, "-1");
           //if current tile has 3 uncovered AND effective >= 2:
           if (eff >= 2 && getType(c, r, ".") == 3){
-            cout << "size of overlap1 should be 3: " << to_string(overlap.size()) << endl;
             //put all uncovered into cur_overlap set
             set<vector<int>> cur_overlap = overlap;
             cout << "col: " << to_string(c+1) << " row: " << to_string(r+1) << endl;
@@ -290,14 +285,10 @@ Agent::Action MyAI::getAction( int number )
               {
                 //check if number, if yes
                 if (!(board[new_y][new_x] == "." || board[new_y][new_x] == "-1")){
-                  
-                  cout << "colz: " << to_string(new_x+1) << " rowz: " << to_string(new_y+1) << endl;
+                  cout << "colz: " << to_string(c+1) << " rowz: " << to_string(r+1) << endl;
                   //if effective of number* is less than effective, and that num has 3 uncovered
                   int cur_effective = std::stoi(board[new_y][new_x]) - getType(new_x, new_y, "-1");
-                  cout << "size of overlap2 should be 3: " << to_string(overlap.size()) << endl;
                   if ((cur_effective < eff) && (getType(new_x, new_y, ".") == 3)){
-                    cout << "size of overlap should be 3: " << to_string(overlap.size()) << endl;
-                    cout << "cur_effective should be 1: " << to_string(cur_effective) << endl;
                     //get a covered* set (of coordinates) of that number
                     int count = 0;
                     for (auto elem: overlap){ //note here that overlap is updated to contain covered of the new coord
@@ -309,7 +300,6 @@ Agent::Action MyAI::getAction( int number )
                         safe = elem;
                       }
                     }
-                    cout << "count should be 2: " << to_string(count);
                     if (count == 2){
                       checked.insert(safe);
                       //return flag the non overlap in cur_overlap
