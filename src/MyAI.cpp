@@ -835,7 +835,7 @@ int MyAI::getType(int x, int y, string type)
     int new_y = y + n[0];
     if((new_x < col && new_x >= 0) && (new_y < row && new_y >= 0))
     {
-      if(board[new_y][new_x] == type)
+      if(board[new_y][new_x] == type){
         type_count++;
         //add coord into coord set
         if (type == "."){
@@ -844,6 +844,7 @@ int MyAI::getType(int x, int y, string type)
           tile.push_back(new_y);
           overlap.insert(tile);
         }
+      }
     }
   }
 
