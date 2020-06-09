@@ -311,7 +311,6 @@ Agent::Action MyAI::getAction( int number )
     for(int r = 0; r < row; r++){
       for(int c = 0; c < col; c++)
       {
-    //
         // checking basic HORIZONTAL 1 1 PATTERNS NEXT TO AN EDGE (l stands for left, r for right, u for up, d for down)
         bool l_h_edge_11_u = (board[r][c] == "1" && c == 0 && r+1 < row && board[r][c+1] == "1");
         if(l_h_edge_11_u)
@@ -598,9 +597,10 @@ Agent::Action MyAI::getAction( int number )
         if(!(board[r][c] == "." || board[r][c] == "-1")) //number only
         {
           int e = std::stoi(board[r][c]) - getType(c, r, "-1"); //effective
-          int percent_bomb = e/getType(c, r, ".");
+          float percent_bomb = e/getType(c, r, ".");
           frontier.push({c, r, percent_bomb});
         }
+
       }
       }//closing brackets of the nested for loops
 
