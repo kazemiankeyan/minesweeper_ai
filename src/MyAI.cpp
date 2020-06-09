@@ -598,7 +598,7 @@ Agent::Action MyAI::getAction( int number )
         {
           int e = std::stoi(board[r][c]) - getType(c, r, "-1"); //effective
           float z = e/getType(c, r, ".");
-          int percent_bomb = (int)z;
+          int percent_bomb = static_cast<int>(z);
           if (overlap.size() > 0){
             vector<int> temp = *overlap.begin();
             frontier.push({temp[0], temp[1], percent_bomb});
