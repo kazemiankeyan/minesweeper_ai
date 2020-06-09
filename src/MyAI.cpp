@@ -302,10 +302,12 @@ Agent::Action MyAI::getAction( int number )
                       checked.insert(safe);
                       //return flag the non overlap in cur_overlap
                       count = 0;
-                      vector<int> to_flag = *cur_overlap.begin();
-                      x = to_flag[0];
-                      y = to_flag[1];
-                      return {FLAG, to_flag[0], to_flag[1]};
+                      if (cur_overlap.size() > 0){
+                        vector<int> to_flag = *cur_overlap.begin();
+                        x = to_flag[0];
+                        y = to_flag[1];
+                        return {FLAG, to_flag[0], to_flag[1]};
+                      }
                     }
                   }
                 }
