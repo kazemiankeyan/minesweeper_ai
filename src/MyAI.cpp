@@ -279,6 +279,8 @@ Agent::Action MyAI::getAction( int number )
           if (eff >= 2 && getType(c, r, ".") == 3){
             //put all uncovered into cur_overlap set
             set<vector<int>> cur_overlap = overlap;
+            cout << "1" << endl;
+            cout << "col: " << to_string(c) << "row: " << to_string(r);
             //iterate thru all tiles around to find number*
             for(int *n : adj8)
             {
