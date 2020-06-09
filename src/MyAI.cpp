@@ -262,7 +262,7 @@ Agent::Action MyAI::getAction( int number )
     }
 
     //test new heuristic
-    for(int r = 0; r < row; r++)
+    for(int r = 0; r < row; r++){
       for(int c = 0; c < col; c++)
       {
         // ======================================================================
@@ -313,6 +313,7 @@ Agent::Action MyAI::getAction( int number )
           }
         }
       }
+    }
 
 
     for(int r = 0; r < row; r++){
@@ -506,7 +507,7 @@ Agent::Action MyAI::getAction( int number )
         {
           if(board[r-1][c+2] == ".")
           {
-            cout << "left horizontal 1 2 down check" << endl;
+            // cout << "left horizontal 1 2 down check" << endl;
 
             x = c+2;
             y = r-1;
@@ -520,7 +521,7 @@ Agent::Action MyAI::getAction( int number )
         {
           if(board[r-1][c-2] == ".")
           {
-            cout << "right horizontal 1 2 down check" << endl;
+            // cout << "right horizontal 1 2 down check" << endl;
 
             x = c-2;
             y = r-1;
@@ -534,7 +535,7 @@ Agent::Action MyAI::getAction( int number )
         {
           if(board[r+1][c+2] == ".")
           {
-            cout << "right horizontal 1 2 up check" << endl;
+            // cout << "right horizontal 1 2 up check" << endl;
 
             x = c+2;
             y = r+1;
@@ -548,7 +549,7 @@ Agent::Action MyAI::getAction( int number )
         {
           if(board[r+1][c-2] == ".")
           {
-            cout << "left horizontal 1 2 up check" << endl;
+            // cout << "left horizontal 1 2 up check" << endl;
 
             x = c-2;
             y = r+1;
@@ -598,7 +599,7 @@ Agent::Action MyAI::getAction( int number )
         {
           if(board[r+2][c+1] == ".")
           {
-            cout << "right vertical 121 check" << endl;
+            // cout << "right vertical 121 check" << endl;
             x = c+1;
             y = r+2;
             mines-=1;
@@ -606,7 +607,7 @@ Agent::Action MyAI::getAction( int number )
           }
           if(board[r][c+1] == ".")
           {
-            cout << "right vertical 121 check" << endl;
+            // cout << "right vertical 121 check" << endl;
             x = c+1;
             y = r;
             mines-=1;
@@ -646,8 +647,9 @@ Agent::Action MyAI::getAction( int number )
             frontier.push({c, r, marked_num});
           }
         }
+
       }
-      }
+      }//closing brackets of the nested for loops
 
 
     // if(frontier.size() > 0)
