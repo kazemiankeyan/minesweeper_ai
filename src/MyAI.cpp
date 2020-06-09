@@ -285,38 +285,38 @@ Agent::Action MyAI::getAction( int number )
             {
               int new_x = c + n[1];
               int new_y = r + n[0];
-
+              cout << "nx: " << to_string(new_x) << " ny: " << to_string(new_y) << endl;
               if((new_x < c && new_x >= 0) && (new_y < r && new_y >= 0)) //within boundary
               {
                 //check if number, if yes
                 if (!(board[new_y][new_x] == "." || board[new_y][new_x] == "-1")){
                   
-                cout << "colz: " << to_string(new_x+1) << " rowz: " << to_string(new_y+1) << endl;
-                //if effective of number* is less than effective, and that num has 3 uncovered
-                int cur_effective = std::stoi(board[new_y][new_x]) - getType(new_x, new_y, "-1");
-                if ((cur_effective < eff) && (getType(new_x, new_y, ".") == 3)){
-                  cout << "cur_effective should be 1: " << to_string(cur_effective) << endl;
-                  //get a covered* set (of coordinates) of that number
-                  int count = 0;
-                  for (auto elem: overlap){ //note here that overlap is updated to contain covered of the new coord
-                    //check if there are 2 overlaps (or 2 elem in overlap also in cur_overlap)
-                    if (cur_overlap.find(elem) != cur_overlap.end()){
-                      count +=1;
-                      cur_overlap.erase(elem);
-                    }else{
-                      safe = elem;
+                  cout << "colz: " << to_string(new_x+1) << " rowz: " << to_string(new_y+1) << endl;
+                  //if effective of number* is less than effective, and that num has 3 uncovered
+                  int cur_effective = std::stoi(board[new_y][new_x]) - getType(new_x, new_y, "-1");
+                  if ((cur_effective < eff) && (getType(new_x, new_y, ".") == 3)){
+                    cout << "cur_effective should be 1: " << to_string(cur_effective) << endl;
+                    //get a covered* set (of coordinates) of that number
+                    int count = 0;
+                    for (auto elem: overlap){ //note here that overlap is updated to contain covered of the new coord
+                      //check if there are 2 overlaps (or 2 elem in overlap also in cur_overlap)
+                      if (cur_overlap.find(elem) != cur_overlap.end()){
+                        count +=1;
+                        cur_overlap.erase(elem);
+                      }else{
+                        safe = elem;
+                      }
                     }
-                  }
-                  if (count == 2){
-                    checked.insert(safe);
-                    //return flag the non overlap in cur_overlap
-                    vector<int> to_flag = *cur_overlap.begin();
-                    return {FLAG, to_flag[0], to_flag[1]};
-                  }
-
+                    if (count == 2){
+                      checked.insert(safe);
+                      //return flag the non overlap in cur_overlap
+                      vector<int> to_flag = *cur_overlap.begin();
+                      return {FLAG, to_flag[0], to_flag[1]};
+                    }
                   }
                 }
               }
+
             }
           }
         }
