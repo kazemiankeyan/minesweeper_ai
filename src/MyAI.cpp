@@ -578,35 +578,35 @@ Agent::Action MyAI::getAction( int number )
         // ======================================================================
 
 
-        // adding to frontier for guessing
-        // if(board[r][c] == ".")
-        // {
-        //   int marked_num = 0;
-        //   for(int i = -1; i < 9; i++)
-        //   {
-        //     marked_num += abs(i * getType(c, r, to_string(i)));
-        //   }
-        //   if(marked_num > 0)
-        //   {
-        //     //c is x, r is y, marked_num is priority in priority queue
-        //     frontier.push({c, r, marked_num});
-        //   }
-        // }
-
-        //employ new guessing method based on percentage of bomb
-        if(!(board[r][c] == "." || board[r][c] == "-1")) //number only
+        //adding to frontier for guessing
+        if(board[r][c] == ".")
         {
-          int e = std::stoi(board[r][c]) - getType(c, r, "-1"); //effective
-          int unc = getType(c, r, ".");
-          if (unc > 0){
-            float z = (float)e/unc;
-            int percent_bomb = (int)100*z;
-            if (overlap.size() > 0){
-              vector<int> temp = *overlap.begin();
-              frontier.push({temp[0], temp[1], percent_bomb});
-            }
+          int marked_num = 0;
+          for(int i = -1; i < 9; i++)
+          {
+            marked_num += abs(i * getType(c, r, to_string(i)));
+          }
+          if(marked_num > 0)
+          {
+            //c is x, r is y, marked_num is priority in priority queue
+            frontier.push({c, r, marked_num});
           }
         }
+
+        //guessing based on percentage of bomb around a number tile.. some how doing worse
+        // if(!(board[r][c] == "." || board[r][c] == "-1")) //number only
+        // {
+        //   int e = std::stoi(board[r][c]) - getType(c, r, "-1"); //effective
+        //   int unc = getType(c, r, ".");
+        //   if (unc > 0){
+        //     float z = (float)e/unc;
+        //     int percent_bomb = (int)100*z;
+        //     if (overlap.size() > 0){
+        //       vector<int> temp = *overlap.begin();
+        //       frontier.push({temp[0], temp[1], percent_bomb});
+        //     }
+        //   }
+        // }
 
       }//closing brackets of the nested for loops
       }//closing brackets of the nested for loops
