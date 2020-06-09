@@ -604,7 +604,6 @@ Agent::Action MyAI::getAction( int number )
             if (overlap.size() > 0){
               vector<int> temp = *overlap.begin();
               frontier.push({temp[0], temp[1], percent_bomb});
-              cout << "percent bomb at col " << to_string (temp[0]) << " row " << to_string (temp[1]) << " is " << to_string(percent_bomb) << endl;
             }
           }
         }
