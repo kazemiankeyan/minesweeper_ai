@@ -297,6 +297,7 @@ Agent::Action MyAI::getAction( int number )
                     cout << "cur_effective should be 1: " << to_string(cur_effective) << endl;
                     //get a covered* set (of coordinates) of that number
                     int count = 0;
+                    cout << "size of overlap should be 3: " << to_string(overlap.size()) << endl;
                     for (auto elem: overlap){ //note here that overlap is updated to contain covered of the new coord
                       //check if there are 2 overlaps (or 2 elem in overlap also in cur_overlap)
                       if (cur_overlap.find(elem) != cur_overlap.end()){
