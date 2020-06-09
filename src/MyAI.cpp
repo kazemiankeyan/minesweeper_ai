@@ -285,7 +285,6 @@ Agent::Action MyAI::getAction( int number )
             {
               int new_x = c + n[1];
               int new_y = r + n[0];
-              cout << "nx: " << to_string(new_x+1) << " ny: " << to_string(new_y+1) << endl;
               if((new_x < col && new_x >= 0) && (new_y < row && new_y >= 0)) //within boundary
               {
                 //check if number, if yes
@@ -301,12 +300,15 @@ Agent::Action MyAI::getAction( int number )
                     for (auto elem: overlap){ //note here that overlap is updated to contain covered of the new coord
                       //check if there are 2 overlaps (or 2 elem in overlap also in cur_overlap)
                       if (cur_overlap.find(elem) != cur_overlap.end()){
+                        cout << "this should appear twice" << endl;
                         count +=1;
                         cur_overlap.erase(elem);
                       }else{
+                        cout << "this should appear once" << endl;
                         safe = elem;
                       }
                     }
+                    cout << "count should be 2: " << to_string(count);
                     if (count == 2){
                       checked.insert(safe);
                       //return flag the non overlap in cur_overlap
