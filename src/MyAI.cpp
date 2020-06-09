@@ -276,6 +276,7 @@ Agent::Action MyAI::getAction( int number )
             //put all uncovered into cur_overlap set
             set<vector<int>> cur_overlap = overlap;
             cout << "col: " << to_string(c+1) << " row: " << to_string(r+1) << endl;
+            printBoard();
             //iterate thru all tiles around to find number*
             for(int *n : adj8)
             {
@@ -303,6 +304,7 @@ Agent::Action MyAI::getAction( int number )
                     if (count == 2){
                       checked.insert(safe);
                       //return flag the non overlap in cur_overlap
+                      count = 0;
                       vector<int> to_flag = *cur_overlap.begin();
                       return {FLAG, to_flag[0], to_flag[1]};
                     }
