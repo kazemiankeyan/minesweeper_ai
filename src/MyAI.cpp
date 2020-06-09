@@ -307,18 +307,6 @@ Agent::Action MyAI::getAction( int number )
       } //for loops closing brackets
     }//for loops closing brackets
 
-    if(frontier.size() > 0)
-    {
-      // cout << "CURRENTLY GUESSING!" << endl;
-      vector<int> f = frontier.top();
-      frontier.pop();
-      if(board[f[1]][f[0]] == ".")
-      {
-        x = f[0];
-        y = f[1];
-        return {UNCOVER, x, y};
-      }
-    }
 
     for(int r = 0; r < row; r++){
       for(int c = 0; c < col; c++)
@@ -592,20 +580,27 @@ Agent::Action MyAI::getAction( int number )
 
 
         // adding to frontier for guessing
-        if(board[r][c] == ".")
-        {
-          int marked_num = 0;
-          for(int i = -1; i < 9; i++)
-          {
-            marked_num += abs(i * getType(c, r, to_string(i)));
-          }
-          if(marked_num > 0)
-          {
-            //c is x, r is y, marked_num is priority in priority queue
-            frontier.push({c, r, marked_num});
-          }
-        }
+        // if(board[r][c] == ".")
+        // {
+        //   int marked_num = 0;
+        //   for(int i = -1; i < 9; i++)
+        //   {
+        //     marked_num += abs(i * getType(c, r, to_string(i)));
+        //   }
+        //   if(marked_num > 0)
+        //   {
+        //     //c is x, r is y, marked_num is priority in priority queue
+        //     frontier.push({c, r, marked_num});
+        //   }
+        // }
 
+        //employ new guessing method based on percentage of bomb
+        if(!(board[r][c] == "." || board[r][c] == "-1")) //number only
+        {
+          int e = std::stoi(board[r][c]) - getType(c, r, "-1"); //effective
+          int percent_bomb = e/getType(c, r, ".");
+          frontier.push({c, r, percent_bomb});
+        }
       }
       }//closing brackets of the nested for loops
 
