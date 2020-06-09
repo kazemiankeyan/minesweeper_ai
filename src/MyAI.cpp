@@ -488,19 +488,19 @@ Agent::Action MyAI::getAction( int number )
           }
         }
 
-        bool r_h_12_u = (board[r][c] == "1" && r+1<row && c+2<col && c-1>=0 && board[r][c+1]=="2" && (board[r][c+2]!="." && board[r][c+2]!="-1")&&(board[r][c-1]!="." && board[r][c-1]!="-1"));
-        if(r_h_12_u)
-        {
-          if(board[r+1][c+2] == ".")
-          {
-            cout << "right horizontal 1 2 up check" << endl;
+        // bool r_h_12_u = (board[r][c] == "1" && r+1<row && c+2<col && c-1>=0 && board[r][c+1]=="2" && (board[r][c+2]!="." && board[r][c+2]!="-1")&&(board[r][c-1]!="." && board[r][c-1]!="-1"));
+        // if(r_h_12_u)
+        // {
+        //   if(board[r+1][c+2] == ".")
+        //   {
+        //     cout << "right horizontal 1 2 up check" << endl;
 
-            x = c+2;
-            y = r+1;
-            mines-=1;
-            return {FLAG, x, y};
-          }
-        }
+        //     x = c+2;
+        //     y = r+1;
+        //     mines-=1;
+        //     return {FLAG, x, y};
+        //   }
+        // }
 
         bool l_h_12_u = (board[r][c] == "1" && r+1<row && c-2>=0 && board[r][c-1]=="2" && (board[r][c-2]!="." && board[r][c-2]!="-1"));
         if(l_h_12_u)
