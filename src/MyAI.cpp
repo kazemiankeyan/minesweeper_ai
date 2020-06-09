@@ -832,7 +832,7 @@ int MyAI::getType(int x, int y, string type)
   {
     int new_x = x + n[1];
     int new_y = y + n[0];
-
+    overlap.clear();
     if((new_x < col && new_x >= 0) && (new_y < row && new_y >= 0))
     {
       if(board[new_y][new_x] == type)
