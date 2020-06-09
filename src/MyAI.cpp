@@ -600,15 +600,15 @@ Agent::Action MyAI::getAction( int number )
           int unc = getType(c, r, ".");
           if (unc > 0){
             int percent_bomb = (int)e/unc;
-            //int percent_bomb = static_cast<int>(z);
             if (overlap.size() > 0){
               vector<int> temp = *overlap.begin();
               frontier.push({temp[0], temp[1], percent_bomb});
+              cout << "percent bomb at col " << to_string (temp[0]) << " row " << to_string (temp[1]) << " is " << to_string(percent_bomb) << endl;
             }
           }
         }
 
-      }
+      }//closing brackets of the nested for loops
       }//closing brackets of the nested for loops
 
 
