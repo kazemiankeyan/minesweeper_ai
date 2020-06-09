@@ -288,7 +288,7 @@ Agent::Action MyAI::getAction( int number )
                   //if effective of number* is less than effective, and that num has 3 uncovered
                   int cur_effective = std::stoi(board[new_y][new_x]) - getType(new_x, new_y, "-1");
                   if ((cur_effective < eff) && (getType(new_x, new_y, ".") == 3)){
-                    cout << "colz: " << to_string(c+1) << " rowz: " << to_string(r+1) << endl;
+                    cout << "colz: " << to_string(new_x+1) << " rowz: " << to_string(new_y+1) << endl;
                     //get a covered* set (of coordinates) of that number
                     int count = 0;
                     for (auto elem: overlap){ //note here that overlap is updated to contain covered of the new coord
