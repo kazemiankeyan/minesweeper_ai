@@ -68,6 +68,9 @@ Agent::Action MyAI::getAction( int number )
 
     //fill the tile at x, y with number
     fillBoard(x, y, number);
+    int adj8 [8][2] = {{-1, 1}, {0, 1}, {1 , 1},
+                  {-1, 0},           {1, 0},
+                  {-1, -1}, {0, -1}, {1, -1}};
 
     // cout << "LABEL: " << number << endl;
     // cout << "ROW: " << row << endl;
@@ -90,14 +93,6 @@ Agent::Action MyAI::getAction( int number )
     // }
     //count the flags around current tile
     int flags = getType(x, y, "-1");
-
-    int marked = 0;
-    for(int i = 0; i < 9; i++)
-    {
-      marked += getType(x, y, to_string(i));
-    }
-    marked += flags; //what is this supposed to be?
-
 
     //effective is amount of potential bomb(s) minus flags around current tile
     int effective = number - flags;
@@ -136,9 +131,6 @@ Agent::Action MyAI::getAction( int number )
     //number of tiles that are still uncovered
     if(effective==unmarked)
     {
-      int adj8 [8][2] = {{-1, 1}, {0, 1}, {1 , 1},
-                        {-1, 0},           {1, 0},
-                        {-1, -1}, {0, -1}, {1, -1}};
       for(int *n : adj8)
       {
         int new_x = x + n[1];
@@ -265,9 +257,6 @@ Agent::Action MyAI::getAction( int number )
     for(int r = 0; r < row; r++){
       for(int c = 0; c < col; c++)
       {
-        int adj8 [8][2] = {{-1, 1}, {0, 1}, {1 , 1},
-                  {-1, 0},           {1, 0},
-                  {-1, -1}, {0, -1}, {1, -1}};
         vector<int> safe;
         if (!(board[r][c] == "." || board[r][c] == "-1")){
           int eff = std::stoi(board[r][c]) - getType(c, r, "-1");
@@ -301,7 +290,6 @@ Agent::Action MyAI::getAction( int number )
                     if (count == 2){
                       checked.insert(safe);
                       //return flag the non overlap in cur_overlap
-                      count = 0;
                       if (cur_overlap.size() > 0){
                         vector<int> to_flag = *cur_overlap.begin();
                         x = to_flag[0];
@@ -317,8 +305,20 @@ Agent::Action MyAI::getAction( int number )
           }
         }
       } //for loops closing brackets
-    }
+    }//for loops closing brackets
 
+    if(frontier.size() > 0)
+    {
+      // cout << "CURRENTLY GUESSING!" << endl;
+      vector<int> f = frontier.top();
+      frontier.pop();
+      if(board[f[1]][f[0]] == ".")
+      {
+        x = f[0];
+        y = f[1];
+        return {UNCOVER, x, y};
+      }
+    }
 
     for(int r = 0; r < row; r++){
       for(int c = 0; c < col; c++)
@@ -620,7 +620,7 @@ Agent::Action MyAI::getAction( int number )
     //     cout << "X: " << f[0] + 1 << " Y: " << f[1] + 1 << " priority: " << f[2] << endl;
     //   }
     // }
-    while(frontier.size() > 0)
+    if(frontier.size() > 0)
     {
       // cout << "CURRENTLY GUESSING!" << endl;
       vector<int> f = frontier.top();
