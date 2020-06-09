@@ -306,7 +306,8 @@ Agent::Action MyAI::getAction( int number )
                       //return flag the non overlap in cur_overlap
                       count = 0;
                       vector<int> to_flag = *cur_overlap.begin();
-                      board[to_flag[0]][to_flag[1]] = "-1";
+                      x = to_flag[1];
+                      y = to_flag[0];
                       return {FLAG, to_flag[0], to_flag[1]};
                     }
                   }
