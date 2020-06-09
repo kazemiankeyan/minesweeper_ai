@@ -275,7 +275,7 @@ Agent::Action MyAI::getAction( int number )
         vector<int> safe;
         //if current tile has 3 uncovered AND effective >= 2:
         if (effective >= 2 && getType(c, r, ".") == 3){
-          //put all uncovered into overlap set
+          //put all uncovered into cur_overlap set
           set<vector<int>> cur_overlap = overlap;
           //iterate thru all tiles around to find number*
           for(int *n : adj8)
@@ -285,10 +285,11 @@ Agent::Action MyAI::getAction( int number )
 
             if((new_x < c && new_x >= 0) && (new_y < r && new_y >= 0))
             {
+              //check if number, if yes
               if (!(board[new_y][new_x] == "." || board[new_y][new_x] == "-1")){
-              //if effective of number* is > effective, and that num has 3 uncovered
+              //if effective of number* is less than effective, and that num has 3 uncovered
               int cur_effective = std::stoi(board[new_y][new_x]) - getType(new_x, new_y, "-1");
-              if ((cur_effective > effective) && (getType(new_x, new_y, ".") == 3)){
+              if ((cur_effective < effective) && (getType(new_x, new_y, ".") == 3)){
                 //get a covered* set (of coordinates) of that number
                 int count = 0;
                 for (auto elem: overlap){ //note here that overlap is updated to contain covered of the new coord
@@ -481,7 +482,7 @@ Agent::Action MyAI::getAction( int number )
         {
             if(board[r+2][c-1] == ".")
             {
-              cout << "left vertical 1 2 up check" << endl;
+              //cout << "left vertical 1 2 up check" << endl;
               x = c-1;
               y = r+2;
               mines-=1;
